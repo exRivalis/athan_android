@@ -17,7 +17,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.StrictMode
 import androidx.core.app.NotificationCompat
-import com.alterpat.athan.AthanReceiver
 import com.alterpat.athan.BuildConfig
 import com.alterpat.athan.MainActivity
 import com.alterpat.athan.R
@@ -58,12 +57,6 @@ fun scheduleNotifications(context: Context, month: Int, day: Int, hour: Int, min
         calendar.timeInMillis,
         alarmIntent
     )
-
-    var uri = Uri.parse(
-        "android.resource://"
-                + context.getPackageName()
-                + "/"
-                + R.raw.athan)
 }
 
 
@@ -81,10 +74,9 @@ fun createNotificationChannel(context: Context) {
             NotificationManager.IMPORTANCE_HIGH)
 
         notificationChannel.enableLights(true)
-        notificationChannel.lightColor = Color.RED
+        notificationChannel.lightColor = Color.WHITE
         notificationChannel.enableVibration(true)
 
-        // Creating an Audio Attribute
         // Creating an Audio Attribute
         val audioAttributes = AudioAttributes.Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -123,14 +115,17 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
 
     var uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + BuildConfig.APPLICATION_ID + "/" + R.raw.athan);
 
-    val notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
+    var notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
         .setContentTitle(title)
         .setContentText(content)
-        .setSmallIcon(R.drawable.ic_athan_launcher)
+        .setSmallIcon(R.drawable.ic_athan)
         .setContentIntent(notificationPendingIntent)
         .setAutoCancel(false)
     if(soundOn)
         notifyBuilder.setSound(uri, AudioManager.STREAM_MUSIC)
+    else
+        notifyBuilder.setSound(null)
+
 
     mNotifyManager.notify(0, notifyBuilder.build())
 }

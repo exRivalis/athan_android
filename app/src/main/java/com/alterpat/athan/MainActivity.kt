@@ -1,58 +1,36 @@
 package com.alterpat.athan
 
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.ULocale
-import android.media.AudioAttributes
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.os.SystemClock
 import androidx.appcompat.app.AppCompatActivity
+import com.alterpat.athan.tool.createNotificationChannel
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.doAsync
 import org.json.JSONObject
-import java.lang.Integer.max
-import java.net.URL
+import java.util.*
+import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity() {
 
     private val prayers = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
-
-    private val PRIMARY_CHANNEL_ID = "athan_notification_channel"
-    private var mNotifyManager: NotificationManager? = null
-
-    private var alarmMgr: AlarmManager? = null
-    private lateinit var alarmIntent: PendingIntent
+    private var timerSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createNotificationChannel()
-        var i = 34
-        scheduleNotifications(1, 16, 9, 35, "Test")
-        scheduleNotifications(1, 16, 9, 40, "Test 2")
-        //scheduleNotifications(20, i+1)
-        //scheduleNotifications(20, i+2)
+        // creates a notification channel if android version > Android O
+        createNotificationChannel(this)
 
-        var countryCode = "FR"
-        var zipCode = "92260"
-        var method = 4
-        var timeFormat = 0
+        // get city name from previous activity
+        var city = intent.getStringExtra("city")
+        townNameTV.text = city
 
-        getPrayers(countryCode, zipCode, method, timeFormat, false)
-
-
+        // get current date in hejir
         val locale = ULocale("@calendar=islamic")
         val islamicCalendar: Calendar = Calendar.getInstance(locale)
 
@@ -64,187 +42,78 @@ class MainActivity : AppCompatActivity() {
         dateStr = dateStr.replace("I", "Al-Awwal", ignoreCase = false)
         dateTV.text = dateStr
 
+        // get time to compute remaining time to next prayer
+        var today = Calendar.getInstance().apply { time = Date()}
 
-    /*
-        val locale: Locale = Locale.forLanguageTag("en-US-u-ca-islamic-umalqura")
-        val chrono: Chronology = Chronology.ofLocale(locale)
-        System.out.println(chrono.toString())
+        var prayersJson = JSONObject(intent.getStringExtra("prayers"))
 
-     */
-    }
+        // set & add prayer items to screen
+        prayers.forEach {
+            var prayerName = it
+            var prayerTime = prayersJson.getString(it)
+                // add view to screen with prayer time
+                prayersLayout.addView(
+                    AthanItem(
+                        applicationContext,
+                        prayerName,
+                        prayerTime
+                    )
+                )
 
-    private fun getPrayers(countryCode:String, zipCode:String, method:Int=3, timeFormat:Int=0, fullMonth: Boolean = false){
-        val baseUrl = "https://www.islamicfinder.us/index.php/api/prayer_times?"
-        var url = baseUrl + "country=$countryCode&zipcode=$zipCode&method=$method&time_format=$timeFormat"
-
-        if(fullMonth)
-            url += "&show_entire_month"
-
-
-        doAsync {
-            val respJsonStr = URL(url).readText()
-            val json = JSONObject(respJsonStr)
-
-            val success = json.getBoolean("success")
-            if (success) {
-
-                runOnUiThread {
-                    townNameTV.text =
-                        json.getJSONObject("settings").getJSONObject("location").getString("city")
+                // set timer to next prayer
+                // check if this prayer is next
+                var prayerDate = Calendar.getInstance().apply {
+                    time = Date()
+                    set(Calendar.HOUR_OF_DAY, prayerTime.split(":")[0].toInt())
+                    set(Calendar.MINUTE, prayerTime.split(":")[1].toInt())
+                    set(Calendar.SECOND, 0)
                 }
 
-                var prayersJson = json.getJSONObject("results")
-
-                prayers.forEach {
-                    var prayerName = it
-                    var prayerTime = prayersJson.getString(it)
-                    runOnUiThread {
-                        prayersLayout.addView(AthanItem(applicationContext, prayerName, prayerTime))
-                    }
+                if(!timerSet && prayerDate > today){
+                    timerSet = true
+                    nextPrayerTV.text = "$prayerName dans :"
+                    counterTV.isCountDown = true
+                    // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
+                    var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
+                    // remove this delta from prayer time milliseconds
+                    var millis = prayerDate.timeInMillis - delta
+                    counterTV.base = millis
+                    counterTV.start()
                 }
-            } else {
-                runOnUiThread {
-                    Toast.makeText(
-                        baseContext,
-                        " Echec lors de la récupération des données ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-            }
-        }
-        // pour demain
-
-        val tomorrow = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_YEAR, 1)
-            time
         }
 
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        // if still timerSet to false -> set remaining time to tomorrow fajr
+        if(!timerSet){
+            var prayerTime = prayersJson.getString(prayers[0])
 
-        val tomorrowAsString: String = dateFormat.format(tomorrow)
-
-
-        var url2 = baseUrl + "country=$countryCode&zipcode=$zipCode&method=$method&time_format=$timeFormat&date=${tomorrowAsString}"
-
-
-        var date = tomorrowAsString.split('-')
-        val month = date[1].toInt()
-        val day = date[2].toInt()
-
-        doAsync {
-            val respJsonStr = URL(url2).readText()
-            val json = JSONObject(respJsonStr)
-
-            val success = json.getBoolean("success")
-            if(success) {
-
-                runOnUiThread {
-                    townNameTV.text = json.getJSONObject("settings").getJSONObject("location").getString("city")
-                }
-
-                var prayersJson = json.getJSONObject("results")
-
-                prayers.forEach {
-                    var prayerName = it
-                    var prayerTime = prayersJson.getString(prayerName)
-                    var h = prayerTime.split(':')[0].toInt()
-                    var m = prayerTime.split(':')[1].toInt()
-                    scheduleNotifications(month, day, h, m, prayerName)
-                }
+            val tomorrow = Calendar.getInstance().apply {
+                add(Calendar.DAY_OF_YEAR, 1)
+                time
             }
 
-        }
+            var prayerDate = Calendar.getInstance().apply {
+                time = Date()
+                set(Calendar.HOUR_OF_DAY, prayerTime.split(":")[0].toInt())
+                set(Calendar.MINUTE, prayerTime.split(":")[1].toInt())
+                set(Calendar.SECOND, 0)
+            }
 
-        /*
-        runOnUiThread {
-            scheduleNotifications(month, 14, 22, 53)
+            nextPrayerTV.text = "${prayers[0]} dans :"
+            counterTV.isCountDown = true
+            // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
+            var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
+            // remove this delta from prayer time milliseconds
+            var millis = prayerDate.timeInMillis - delta
+            counterTV.base = millis
+            counterTV.start()
+
         }
-         */
 
     }
 
 
 
-    private fun createNotificationChannel() {
-        mNotifyManager = getSystemService(NotificationManager::class.java) as NotificationManager
-
-        // notification channels are only available in API 26 and higher
-        // Create a NotificationChannel
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                PRIMARY_CHANNEL_ID,
-                "Athan Notification",
-                NotificationManager.IMPORTANCE_HIGH)
-
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
-            notificationChannel.enableVibration(true)
-
-            // Creating an Audio Attribute
-            // Creating an Audio Attribute
-            val audioAttributes = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
-
-            var uri = Uri.parse(
-                "android.resource://"
-                        + getPackageName()
-                        + "/"
-                        + R.raw.athan)
-
-            notificationChannel.setSound(uri, audioAttributes)
-            notificationChannel.setDescription("Athan");
-
-            mNotifyManager!!.createNotificationChannel(notificationChannel);
-
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
 
 
-
-    }
-
-    private fun scheduleNotifications(month: Int, day: Int, hour: Int, minute: Int, athan: String) {
-        // Set the alarm to start
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.MONTH, max(0, month-1))
-            set(Calendar.DAY_OF_MONTH, day)
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-        }
-
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-        val tomorrowAsString: String = dateFormat.format(calendar)
-        System.out.println(tomorrowAsString)
-
-        alarmIntent = Intent(this, AthanReceiver::class.java).let { intent ->
-            intent.action = "ATHAN_ALARM"
-            intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-            intent.putExtra("prayer", athan)
-            PendingIntent.getBroadcast(this, calendar.timeInMillis.toInt(), intent, 0)
-        }
-
-
-        alarmMgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        alarmMgr?.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            alarmIntent
-        )
-
-        var uri = Uri.parse(
-                "android.resource://"
-                        + getPackageName()
-                        + "/"
-                        + R.raw.athan)
-    }
 
 }

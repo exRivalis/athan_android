@@ -1,10 +1,9 @@
-package com.alterpat.athan
+package com.alterpat.athan.tool
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-
-import com.alterpat.athan.tool.scheduleNotifications
+import android.util.Log
 
 
 class AthanReceiver : BroadcastReceiver() {
@@ -15,9 +14,26 @@ class AthanReceiver : BroadcastReceiver() {
 
         this.context = context!!
 
-        scheduleNotifications(context, 1, 16, 10, 17, "Test2")
 
+        Log.d("startuptest", "StartUpBootReceiver BOOT_COMPLETED outside");
+        fireNotification(context, "Athan", "Test", false)
+
+
+        if (Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(intent?.getAction())) {
+            Log.d("startuptest", "StartUpBootReceiver BOOT_COMPLETED")
+            //scheduleNotifications(context, 1, 16, 10, 17, "Test2")
+            createNotificationChannel(context)
+            fireNotification(context, "Athan", "Test", false)
+        }
         /*
+
+        if(intent?.action == "android.intent.action.BOOT_COMPLETED"){
+            ////// reset your alrarms here
+            val serviceIntent = Intent(context, AthanService::class.java)
+            context.startService(serviceIntent)
+            //scheduleNotifications(context, 1, 16, 10, 17, "Test2")
+
+        }
 
         if (intent?.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             ////// reset your alrarms here
