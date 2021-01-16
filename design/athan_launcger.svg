@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="260" height="260" viewBox="0 0 260 260">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.126" y1="0.092" x2="1.17" y2="1.134" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#4c935f"/>
+      <stop offset="1" stop-color="#264a30"/>
+    </linearGradient>
+  </defs>
+  <g id="Groupe_168" data-name="Groupe 168" transform="translate(729 242)">
+    <rect id="Rectangle_9" data-name="Rectangle 9" width="260" height="260" rx="50" transform="translate(-729 -242)" fill="url(#linear-gradient)"/>
+    <g id="Groupe_166" data-name="Groupe 166" transform="translate(45.5 -26)">
+      <path id="Tracé_20" data-name="Tracé 20" d="M1136.764,221.873v35.02H1132v8.461h5.477s-3.009,7.883,12.269,17.01,19.825,16.077,19.825,16.077,3.577-7.124,19.024-16.077,12.647-17.01,12.647-17.01H1206v-8.461h-4.758v-35.02H1206V213.65h-8.223s10.592-12.231,3.464-27.053c-3.708-7.707-14.008-6.9-22-14.96s-9.665-13.122-9.665-13.122-.981,3.908-9.105,12.17-19.821,9.067-23.707,16.73a24.192,24.192,0,0,0,2.429,26.235H1132v8.222Z" transform="translate(-1813.5 -310.28)" fill="none" stroke="#fff" stroke-width="4"/>
+      <g id="Groupe_21" data-name="Groupe 21" transform="translate(-215 -211.198)">
+        <path id="Tracé_10" data-name="Tracé 10" d="M1139.861,234.694a2.807,2.807,0,0,1,1-4.363,22.156,22.156,0,0,0,5.634-5.062,15.262,15.262,0,0,0,5.1,5.062c3.057,1.617.775,4.363.775,4.363v15.957h-12.507Z" transform="translate(-1594.187 -98.873)" fill="none" stroke="#fff" stroke-width="3"/>
+        <path id="Tracé_17" data-name="Tracé 17" d="M1139.861,234.694a2.807,2.807,0,0,1,1-4.363,22.156,22.156,0,0,0,5.634-5.062,15.262,15.262,0,0,0,5.1,5.062c3.057,1.617.775,4.363.775,4.363v15.957h-12.507Z" transform="translate(-1575.437 -98.873)" fill="none" stroke="#fff" stroke-width="3"/>
+        <path id="Tracé_18" data-name="Tracé 18" d="M1139.861,234.694a2.807,2.807,0,0,1,1-4.363,22.156,22.156,0,0,0,5.634-5.062,15.262,15.262,0,0,0,5.1,5.062c3.057,1.617.775,4.363.775,4.363v15.957h-12.507Z" transform="translate(-1556.687 -98.873)" fill="none" stroke="#fff" stroke-width="3"/>
+      </g>
+      <circle id="Ellipse_35" data-name="Ellipse 35" cx="3" cy="3" r="3" transform="translate(-646.8 -7)" fill="#fff"/>
+      <circle id="Ellipse_36" data-name="Ellipse 36" cx="3" cy="3" r="3" transform="translate(-646.8 -183)" fill="#fff"/>
+      <circle id="Ellipse_37" data-name="Ellipse 37" cx="3" cy="3" r="3" transform="translate(-646.8 -165)" fill="#fff"/>
+      <circle id="Ellipse_38" data-name="Ellipse 38" cx="2" cy="2" r="2" transform="translate(-645.9 4)" fill="#fff"/>
+      <circle id="Ellipse_39" data-name="Ellipse 39" cx="2" cy="2" r="2" transform="translate(-645.9 -177)" fill="#fff"/>
+      <circle id="Ellipse_40" data-name="Ellipse 40" cx="2" cy="2" r="2" transform="translate(-645.9 -187)" fill="#fff"/>
+      <path id="Tracé_21" data-name="Tracé 21" d="M-554.654,182.665v16.369" transform="translate(-89.146 -184.165)" fill="none" stroke="#fff" stroke-width="2"/>
+      <path id="Tracé_22" data-name="Tracé 22" d="M-554.654,182.665v27.869" transform="translate(-89.146 -371.665)" fill="none" stroke="#fff" stroke-width="2"/>
+      <path id="Tracé_23" data-name="Tracé 23" d="M-557.286,197.374l-2.035,3.466,2.035,3.169,1.965-3.169Z" transform="translate(-86.479 -186.203)" fill="#fff"/>
+    </g>
+    <g id="Groupe_167" data-name="Groupe 167" transform="translate(47.5 -23)" opacity="0.147">
+      <path id="Tracé_20-2" data-name="Tracé 20" d="M1136.764,221.873v35.02H1132v8.461h5.477s-3.009,7.883,12.269,17.01,19.825,16.077,19.825,16.077,3.577-7.124,19.024-16.077,12.647-17.01,12.647-17.01H1206v-8.461h-4.758v-35.02H1206V213.65h-8.223s10.592-12.231,3.464-27.053c-3.708-7.707-14.008-6.9-22-14.96s-9.665-13.122-9.665-13.122-.981,3.908-9.105,12.17-19.821,9.067-23.707,16.73a24.192,24.192,0,0,0,2.429,26.235H1132v8.222Z" transform="translate(-1813.5 -310.28)" fill="none" stroke="#000" stroke-width="8"/>
+      <g id="Groupe_21-2" data-name="Groupe 21" transform="translate(-215 -211.198)">
+        <path id="Tracé_10-2" data-name="Tracé 10" d="M1139.861,234.694a2.807,2.807,0,0,1,1-4.363,22.156,22.156,0,0,0,5.634-5.062,15.262,15.262,0,0,0,5.1,5.062c3.057,1.617.775,4.363.775,4.363v15.957h-12.507Z" transform="translate(-1594.187 -98.873)" fill="none" stroke="#000" stroke-width="8"/>
+        <path id="Tracé_17-2" data-name="Tracé 17" d="M1139.861,234.694a2.807,2.807,0,0,1,1-4.363,22.156,22.156,0,0,0,5.634-5.062,15.262,15.262,0,0,0,5.1,5.062c3.057,1.617.775,4.363.775,4.363v15.957h-12.507Z" transform="translate(-1575.437 -98.873)" fill="none" stroke="#000" stroke-width="8"/>
+        <path id="Tracé_18-2" data-name="Tracé 18" d="M1139.861,234.694a2.807,2.807,0,0,1,1-4.363,22.156,22.156,0,0,0,5.634-5.062,15.262,15.262,0,0,0,5.1,5.062c3.057,1.617.775,4.363.775,4.363v15.957h-12.507Z" transform="translate(-1556.687 -98.873)" fill="none" stroke="#000" stroke-width="8"/>
+      </g>
+      <circle id="Ellipse_35-2" data-name="Ellipse 35" cx="3" cy="3" r="3" transform="translate(-646.8 -7)"/>
+      <circle id="Ellipse_36-2" data-name="Ellipse 36" cx="3" cy="3" r="3" transform="translate(-646.8 -183)"/>
+      <circle id="Ellipse_37-2" data-name="Ellipse 37" cx="3" cy="3" r="3" transform="translate(-646.8 -165)"/>
+      <circle id="Ellipse_38-2" data-name="Ellipse 38" cx="2" cy="2" r="2" transform="translate(-645.9 4)"/>
+      <circle id="Ellipse_39-2" data-name="Ellipse 39" cx="2" cy="2" r="2" transform="translate(-645.9 -177)"/>
+      <circle id="Ellipse_40-2" data-name="Ellipse 40" cx="2" cy="2" r="2" transform="translate(-645.9 -187)"/>
+      <path id="Tracé_21-2" data-name="Tracé 21" d="M-554.654,182.665v16.369" transform="translate(-89.146 -184.165)" fill="none" stroke="#000" stroke-width="8"/>
+      <path id="Tracé_22-2" data-name="Tracé 22" d="M-554.654,182.665v27.869" transform="translate(-89.146 -371.665)" fill="none" stroke="#000" stroke-width="8"/>
+      <path id="Tracé_23-2" data-name="Tracé 23" d="M-557.286,197.374l-2.035,3.466,2.035,3.169,1.965-3.169Z" transform="translate(-86.479 -186.203)"/>
+    </g>
+  </g>
+</svg>
