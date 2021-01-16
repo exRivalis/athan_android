@@ -26,6 +26,27 @@ private val NOTIFICATION_ID = 0
 
 
 // schedules a notification for firing at a specific day & time
+fun scheduleNotifications(context: Context, timestamp: Long, athan: String) {
+
+
+
+    var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
+        intent.action = "ATHAN_ALARM"
+        intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+        intent.putExtra("prayer", athan)
+        PendingIntent.getBroadcast(context, timestamp.toInt(), intent, 0)
+    }
+
+
+    var alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    alarmMgr?.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        timestamp,
+        alarmIntent
+    )
+}
+
 fun scheduleNotifications(context: Context, month: Int, day: Int, hour: Int, minute: Int, athan: String) {
     // Set the alarm to start
     val calendar: Calendar = Calendar.getInstance().apply {
@@ -38,9 +59,6 @@ fun scheduleNotifications(context: Context, month: Int, day: Int, hour: Int, min
     }
 
     val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-    val tomorrowAsString: String = dateFormat.format(calendar)
-    System.out.println(tomorrowAsString)
 
     var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
         intent.action = "ATHAN_ALARM"

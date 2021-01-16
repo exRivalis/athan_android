@@ -3,7 +3,16 @@ package com.alterpat.athan.tool
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.os.SystemClock
 import android.util.Log
+import com.alterpat.athan.AthanItem
+import com.alterpat.athan.dao.PrayerDatabase
+import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
+import java.util.*
+import kotlin.math.abs
 
 
 class AthanReceiver : BroadcastReceiver() {
@@ -14,16 +23,29 @@ class AthanReceiver : BroadcastReceiver() {
 
         this.context = context!!
 
-
-        Log.d("startuptest", "StartUpBootReceiver BOOT_COMPLETED outside");
-        fireNotification(context, "Athan", "Test", false)
-
-
         if (Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(intent?.getAction())) {
             Log.d("startuptest", "StartUpBootReceiver BOOT_COMPLETED")
-            //scheduleNotifications(context, 1, 16, 10, 17, "Test2")
             createNotificationChannel(context)
-            fireNotification(context, "Athan", "Test", false)
+
+            // get prayer for today
+            // date in "yyyy MMM dd" format
+            var now = System.currentTimeMillis()
+
+            val df1 = SimpleDateFormat("yyyy-MM-dd")
+            var dateStr = df1.format(now)
+
+            // request today's prayers
+            val db = PrayerDatabase.getInstance(context)
+            var prayerDao = db.prayerDao
+            doAsync {
+                var prayers = prayerDao.loadByDay(dateStr)
+                // schedule notifications
+                prayers.forEach { prayer ->
+                    if(prayer.timestamp > now){
+                        scheduleNotifications(context, prayer.timestamp, prayer.name)
+                    }
+                }
+            }
         }
         /*
 

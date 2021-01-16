@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.alterpat.athan.dao.Prayer
+import com.alterpat.athan.dao.PrayerDao
 import com.alterpat.athan.dao.PrayerDatabase
 import com.alterpat.athan.tool.createNotificationChannel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -54,31 +55,45 @@ class MainActivity : AppCompatActivity() {
 
         // populate screen elements
         setPrayers()
+
     }
 
     private fun setPrayers(){
         // get time to compute remaining time to next prayer
         var today = Calendar.getInstance().apply { time = Date()}
 
+        val db = PrayerDatabase.getInstance(baseContext)
+        val prayerDao = db.prayerDao
 
         // request today's prayers
-        val db = PrayerDatabase.getInstance(baseContext)
-        var prayerDao = db.prayerDao
         doAsync {
-            var prayers = prayerDao.loadByDay("2021-01-14")
-            Log.d("request", "${prayers.size.toString()}");
+            val df1 = SimpleDateFormat("yyyy-MM-dd")
+            var dateStr = df1.format(System.currentTimeMillis())
+
+            /** THIS IS A TEST **/
+            /*
+            val pTime = System.currentTimeMillis() + 3 * 60 * 1000
+            val p =Prayer(pTime, "2021-01-16", "14:99", "Tesdt")
+            prayerDao.insert(p)
+            */
+            /** END **/
+
+            var prayers = prayerDao.loadByDay(dateStr)
             // set & add prayer items to screen
             prayers.forEach { prayer ->
                 var prayerName = prayer.name
                 var prayerTime = prayer.time
                 // add view to screen with prayer time
-                prayersLayout.addView(
-                    AthanItem(
-                        applicationContext,
-                        prayerName,
-                        prayerTime
+                runOnUiThread{
+                    prayersLayout.addView(
+                        AthanItem(
+                            applicationContext,
+                            prayerName,
+                            prayerTime
+                        )
                     )
-                )
+                }
+
 
                 // set countdown to next prayer
                 // check if this prayer is next

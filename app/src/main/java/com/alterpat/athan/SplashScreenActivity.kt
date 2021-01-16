@@ -15,8 +15,7 @@ import java.text.SimpleDateFormat
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val prayerNames = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
-    private lateinit var db : PrayerDatabase
+    //private val prayerNames = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,20 +33,21 @@ class SplashScreenActivity : AppCompatActivity() {
         var zipCode = sharedPref.getString("zipCode", "92260")!!
         var method = sharedPref.getInt("method", 4)
         var timeFormat = sharedPref.getInt("timeFormat", 0)
+        val lastLoad = sharedPref.getString("lastLoad", "")!!
 
-        // init db to save data
-        db = Room.databaseBuilder(
-            applicationContext,
-            PrayerDatabase::class.java, "athan-db"
-        ).build()
-
+        val df1 = android.icu.text.SimpleDateFormat("yyyy-MM-dd")
+        var todayStr = df1.format(System.currentTimeMillis())
 
         // get prayers for the whole current month
-        getPrayers(countryCode, zipCode, method, timeFormat, true)
+       if(lastLoad != todayStr)
+            getPrayers(todayStr, countryCode, zipCode, method, timeFormat, true)
+       else
+         startActivity(Intent(applicationContext, MainActivity::class.java))
+
 
     }
 
-    private fun getPrayers(countryCode:String, zipCode:String, method:Int=3, timeFormat:Int=0, fullMonth: Boolean = false){
+    private fun getPrayers(todayStr: String, countryCode:String, zipCode:String, method:Int=3, timeFormat:Int=0, fullMonth: Boolean = false){
         val baseUrl = "https://www.islamicfinder.us/index.php/api/prayer_times?"
         var url = baseUrl + "country=$countryCode&zipcode=$zipCode&method=$method&time_format=$timeFormat"
 
@@ -85,6 +85,14 @@ class SplashScreenActivity : AppCompatActivity() {
                 }
 
 
+                val sharedPref = getSharedPreferences(
+                    "athanPrefs", Context.MODE_PRIVATE
+                )
+
+                with (sharedPref.edit()) {
+                    putString("lastLoad", todayStr)
+                    apply()
+                }
 
                 startActivity(Intent(applicationContext, MainActivity::class.java))
 
