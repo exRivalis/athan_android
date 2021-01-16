@@ -9,7 +9,6 @@ import java.sql.Date
 data class Prayer(
     @PrimaryKey @ColumnInfo(name = "timestamp") val timestamp : Long,
     @ColumnInfo(name = "date") val date : String,
-    @ColumnInfo(name = "hour") val hour : Int,
-    @ColumnInfo(name = "minute") val minute : Int,
-    @ColumnInfo(name = "prayer") val prayer : String
+    @ColumnInfo(name = "time") val time : String,
+    @ColumnInfo(name = "name") val name : String
     )

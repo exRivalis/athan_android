@@ -1,47 +1,49 @@
 package com.alterpat.athan
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.room.Room
-import com.alterpat.athan.dao.AppDatabase
+import com.alterpat.athan.dao.PrayerDatabase
 import com.alterpat.athan.dao.Prayer
-import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 import java.net.URL
+import java.text.SimpleDateFormat
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private val prayers = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
-    private lateinit var db : AppDatabase
+    private val prayerNames = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
+    private lateinit var db : PrayerDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        var countryCode = "FR"
-        var zipCode = "92260"
-        var method = 4
-        var timeFormat = 0
 
-        getPrayers(countryCode, zipCode, method, timeFormat, false)
+        /** Get user preferences **/
+        val sharedPref = getSharedPreferences(
+            "athanPrefs", Context.MODE_PRIVATE
+        )
 
+        var countryCode = sharedPref.getString("countryCode", "FR")!!
+        var city = sharedPref.getString("city", "Fontenay-aux-roses")!!
+        var zipCode = sharedPref.getString("zipCode", "92260")!!
+        var method = sharedPref.getInt("method", 4)
+        var timeFormat = sharedPref.getInt("timeFormat", 0)
+
+        // init db to save data
         db = Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "athan-db"
+            PrayerDatabase::class.java, "athan-db"
         ).build()
 
 
-        /** THIS IS A TEST **/
-        // insert a prayer to prayers table into local db
-        val prayerDao = db.prayerDao()
-        doAsync {
-            prayerDao.insertAll(Prayer(19808, "2020-01-18", 20, 34, "Isha"))
-        }
-        /** END **/
+        // get prayers for the whole current month
+        getPrayers(countryCode, zipCode, method, timeFormat, true)
 
     }
 
@@ -57,17 +59,34 @@ class SplashScreenActivity : AppCompatActivity() {
             val respJsonStr = URL(url).readText()
             val json = JSONObject(respJsonStr)
 
+            // save prayers to db
+            // insert a prayer to prayers table into local db
+            val db = PrayerDatabase.getInstance(baseContext)
+            var prayerDao = db.prayerDao
+            prayerDao.clean()
+
             val success = json.getBoolean("success")
             if (success) {
                 var prayersJson = json.getJSONObject("results")
-                var city = json.getJSONObject("settings").getJSONObject("location").getString("city")
 
-                var intent = Intent(applicationContext, MainActivity::class.java)
+                var prayers : Array<Prayer> = arrayOf()
 
-                intent.putExtra("city", city)
-                intent.putExtra("prayers", prayersJson.toString())
+                // for each day add it to prayers
+                prayersJson.keys().forEach { date ->
+                    // get a day's prayers
+                    val dayPrayers = prayersJson.getJSONObject(date)
+                    dayPrayers.keys().forEach { prayerName ->
+                        // get a single prayer & add it to prayers
+                        var time = dayPrayers.getString(prayerName)
+                        var timestamp : Long= SimpleDateFormat("yyyy-MM-dd hh:mm").parse("$date $time").let { it.time }
+                        val prayer = Prayer(timestamp, date, time, prayerName)
+                        prayerDao.insert(prayer)
+                    }
+                }
 
-                startActivity(intent)
+
+
+                startActivity(Intent(applicationContext, MainActivity::class.java))
 
             } else {
                 runOnUiThread {

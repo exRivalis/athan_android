@@ -1,25 +1,26 @@
 package com.alterpat.athan
 
-import android.icu.text.DateFormat
+import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.ULocale
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
-import com.alterpat.athan.dao.AppDatabase
+import com.alterpat.athan.dao.Prayer
+import com.alterpat.athan.dao.PrayerDatabase
 import com.alterpat.athan.tool.createNotificationChannel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
-import org.json.JSONObject
 import java.util.*
 import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val prayers = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
+    //private val prayersNames = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
     private var timerSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +30,14 @@ class MainActivity : AppCompatActivity() {
         // creates a notification channel if android version > Android O
         createNotificationChannel(this)
 
-        // get city name from previous activity
-        var city = intent.getStringExtra("city")
+        // get city name from shared prefs
+        /** Get user preferences **/
+        val sharedPref = getSharedPreferences(
+            "athanPrefs", Context.MODE_PRIVATE
+        )
+
+        var countryCode = sharedPref.getString("countryCode", "FR")!!
+        var city = sharedPref.getString("city", "Fontenay-aux-roses")!!
         townNameTV.text = city
 
         // get current date in hejir
@@ -47,53 +54,64 @@ class MainActivity : AppCompatActivity() {
 
         // populate screen elements
         setPrayers()
-
-
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "athan-db"
-        ).build()
-
-        val prayerDao = db.prayerDao()
-        doAsync {
-            var prayersList = prayerDao.getAll()
-            System.out.println(prayersList[0].date)
-        }
-
-
     }
 
     private fun setPrayers(){
         // get time to compute remaining time to next prayer
         var today = Calendar.getInstance().apply { time = Date()}
 
-        var prayersJson = JSONObject(intent.getStringExtra("prayers"))
 
-        // set & add prayer items to screen
-        prayers.forEach {
-            var prayerName = it
-            var prayerTime = prayersJson.getString(it)
-            // add view to screen with prayer time
-            prayersLayout.addView(
-                AthanItem(
-                    applicationContext,
-                    prayerName,
-                    prayerTime
+        // request today's prayers
+        val db = PrayerDatabase.getInstance(baseContext)
+        var prayerDao = db.prayerDao
+        doAsync {
+            var prayers = prayerDao.loadByDay("2021-01-14")
+            Log.d("request", "${prayers.size.toString()}");
+            // set & add prayer items to screen
+            prayers.forEach { prayer ->
+                var prayerName = prayer.name
+                var prayerTime = prayer.time
+                // add view to screen with prayer time
+                prayersLayout.addView(
+                    AthanItem(
+                        applicationContext,
+                        prayerName,
+                        prayerTime
+                    )
                 )
-            )
 
-            // set timer to next prayer
-            // check if this prayer is next
-            var prayerDate = Calendar.getInstance().apply {
-                time = Date()
-                set(Calendar.HOUR_OF_DAY, prayerTime.split(":")[0].toInt())
-                set(Calendar.MINUTE, prayerTime.split(":")[1].toInt())
-                set(Calendar.SECOND, 0)
+                // set countdown to next prayer
+                // check if this prayer is next
+
+                if(!timerSet && prayer.timestamp > today.timeInMillis){
+                    timerSet = true
+                    nextPrayerTV.text = "$prayerName dans :"
+                    counterTV.isCountDown = true
+                    // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
+                    var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
+                    // remove this delta from prayer time milliseconds
+                    var millis = prayer.timestamp - delta
+                    counterTV.base = millis
+                    counterTV.start()
+                }
             }
 
-            if(!timerSet && prayerDate > today){
-                timerSet = true
-                nextPrayerTV.text = "$prayerName dans :"
+            // if still timerSet to false -> set remaining time to tomorrow fajr
+            if(!timerSet){
+                val tomorrow = Calendar.getInstance().apply {
+                    add(Calendar.DAY_OF_YEAR, 1)
+                    time
+                }
+
+                var prayerDate = Calendar.getInstance().apply {
+                    time = Date()
+                    add(Calendar.DAY_OF_YEAR, 1)
+                    set(Calendar.HOUR_OF_DAY, prayers[0].time.split(":")[0].toInt())
+                    set(Calendar.MINUTE, prayers[0].time.split(":")[1].toInt())
+                    set(Calendar.SECOND, 0)
+                }
+
+                nextPrayerTV.text = "${prayers[0].name} dans"
                 counterTV.isCountDown = true
                 // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
                 var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
@@ -101,34 +119,8 @@ class MainActivity : AppCompatActivity() {
                 var millis = prayerDate.timeInMillis - delta
                 counterTV.base = millis
                 counterTV.start()
+
             }
-        }
-
-        // if still timerSet to false -> set remaining time to tomorrow fajr
-        if(!timerSet){
-            var prayerTime = prayersJson.getString(prayers[0])
-
-            val tomorrow = Calendar.getInstance().apply {
-                add(Calendar.DAY_OF_YEAR, 1)
-                time
-            }
-
-            var prayerDate = Calendar.getInstance().apply {
-                time = Date()
-                set(Calendar.HOUR_OF_DAY, prayerTime.split(":")[0].toInt())
-                set(Calendar.MINUTE, prayerTime.split(":")[1].toInt())
-                set(Calendar.SECOND, 0)
-            }
-
-            nextPrayerTV.text = "${prayers[0]} dans :"
-            counterTV.isCountDown = true
-            // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
-            var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
-            // remove this delta from prayer time milliseconds
-            var millis = prayerDate.timeInMillis - delta
-            counterTV.base = millis
-            counterTV.start()
-
         }
     }
 

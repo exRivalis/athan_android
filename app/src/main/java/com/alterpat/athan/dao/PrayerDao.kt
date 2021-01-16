@@ -1,9 +1,6 @@
 package com.alterpat.athan.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import java.util.*
 
 @Dao
@@ -12,12 +9,15 @@ interface PrayerDao {
     fun getAll(): List<Prayer>
 
     @Query("SELECT * FROM prayers WHERE date  == :date")
-    fun loadAllByDay(date: String): List<Prayer>
+    fun loadByDay(date: String): List<Prayer>
 
-    @Insert
-    fun insertAll(vararg prayers: Prayer)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(prayer: Prayer)
 
     @Delete
     fun delete(prayer: Prayer)
+
+    @Query("DELETE FROM prayers")
+    fun clean()
 
 }
