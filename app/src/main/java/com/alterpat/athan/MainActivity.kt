@@ -7,8 +7,11 @@ import android.icu.util.ULocale
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
+import com.alterpat.athan.dao.AppDatabase
 import com.alterpat.athan.tool.createNotificationChannel
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 import java.util.*
 import kotlin.math.abs
@@ -42,6 +45,25 @@ class MainActivity : AppCompatActivity() {
         dateStr = dateStr.replace("I", "Al-Awwal", ignoreCase = false)
         dateTV.text = dateStr
 
+        // populate screen elements
+        setPrayers()
+
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "athan-db"
+        ).build()
+
+        val prayerDao = db.prayerDao()
+        doAsync {
+            var prayersList = prayerDao.getAll()
+            System.out.println(prayersList[0].date)
+        }
+
+
+    }
+
+    private fun setPrayers(){
         // get time to compute remaining time to next prayer
         var today = Calendar.getInstance().apply { time = Date()}
 
@@ -51,35 +73,35 @@ class MainActivity : AppCompatActivity() {
         prayers.forEach {
             var prayerName = it
             var prayerTime = prayersJson.getString(it)
-                // add view to screen with prayer time
-                prayersLayout.addView(
-                    AthanItem(
-                        applicationContext,
-                        prayerName,
-                        prayerTime
-                    )
+            // add view to screen with prayer time
+            prayersLayout.addView(
+                AthanItem(
+                    applicationContext,
+                    prayerName,
+                    prayerTime
                 )
+            )
 
-                // set timer to next prayer
-                // check if this prayer is next
-                var prayerDate = Calendar.getInstance().apply {
-                    time = Date()
-                    set(Calendar.HOUR_OF_DAY, prayerTime.split(":")[0].toInt())
-                    set(Calendar.MINUTE, prayerTime.split(":")[1].toInt())
-                    set(Calendar.SECOND, 0)
-                }
+            // set timer to next prayer
+            // check if this prayer is next
+            var prayerDate = Calendar.getInstance().apply {
+                time = Date()
+                set(Calendar.HOUR_OF_DAY, prayerTime.split(":")[0].toInt())
+                set(Calendar.MINUTE, prayerTime.split(":")[1].toInt())
+                set(Calendar.SECOND, 0)
+            }
 
-                if(!timerSet && prayerDate > today){
-                    timerSet = true
-                    nextPrayerTV.text = "$prayerName dans :"
-                    counterTV.isCountDown = true
-                    // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
-                    var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
-                    // remove this delta from prayer time milliseconds
-                    var millis = prayerDate.timeInMillis - delta
-                    counterTV.base = millis
-                    counterTV.start()
-                }
+            if(!timerSet && prayerDate > today){
+                timerSet = true
+                nextPrayerTV.text = "$prayerName dans :"
+                counterTV.isCountDown = true
+                // since base needs an "elapsedRealtime" -> compute delta between realtime and device startup time
+                var delta = abs(SystemClock.elapsedRealtime() - today.timeInMillis)
+                // remove this delta from prayer time milliseconds
+                var millis = prayerDate.timeInMillis - delta
+                counterTV.base = millis
+                counterTV.start()
+            }
         }
 
         // if still timerSet to false -> set remaining time to tomorrow fajr
@@ -108,10 +130,7 @@ class MainActivity : AppCompatActivity() {
             counterTV.start()
 
         }
-
     }
-
-
 
 
 

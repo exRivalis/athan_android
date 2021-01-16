@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.room.Room
+import com.alterpat.athan.dao.AppDatabase
+import com.alterpat.athan.dao.Prayer
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.json.JSONObject
@@ -12,6 +15,7 @@ import java.net.URL
 class SplashScreenActivity : AppCompatActivity() {
 
     private val prayers = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
+    private lateinit var db : AppDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +28,20 @@ class SplashScreenActivity : AppCompatActivity() {
         var timeFormat = 0
 
         getPrayers(countryCode, zipCode, method, timeFormat, false)
+
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "athan-db"
+        ).build()
+
+
+        /** THIS IS A TEST **/
+        // insert a prayer to prayers table into local db
+        val prayerDao = db.prayerDao()
+        doAsync {
+            prayerDao.insertAll(Prayer(19808, "2020-01-18", 20, 34, "Isha"))
+        }
+        /** END **/
 
     }
 
