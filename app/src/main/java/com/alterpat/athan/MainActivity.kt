@@ -1,17 +1,16 @@
 package com.alterpat.athan
 
 import android.content.Context
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.ULocale
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
-import com.alterpat.athan.dao.Prayer
-import com.alterpat.athan.dao.PrayerDao
 import com.alterpat.athan.dao.PrayerDatabase
+import com.alterpat.athan.tool.AthanReceiver
+import com.alterpat.athan.tool.AthanService
 import com.alterpat.athan.tool.createNotificationChannel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -30,6 +29,14 @@ class MainActivity : AppCompatActivity() {
 
         // creates a notification channel if android version > Android O
         createNotificationChannel(this)
+
+        //val serviceIntent = Intent(this, AthanService::class.java)
+        //serviceIntent.putExtra("input", "Hello")
+
+        //startService(serviceIntent)
+        val intent = Intent(this,  AthanReceiver::class.java)
+        intent.action = "startUp"
+        sendBroadcast(intent)
 
         // get city name from shared prefs
         /** Get user preferences **/

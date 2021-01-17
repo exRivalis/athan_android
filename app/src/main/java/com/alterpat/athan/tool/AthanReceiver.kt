@@ -3,50 +3,95 @@ package com.alterpat.athan.tool
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
-import android.os.SystemClock
+import android.os.Build
 import android.util.Log
-import com.alterpat.athan.AthanItem
+import androidx.annotation.RequiresApi
+import com.alterpat.athan.dao.Prayer
 import com.alterpat.athan.dao.PrayerDatabase
-import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.runOnUiThread
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
+import kotlin.collections.ArrayList
 
 
 class AthanReceiver : BroadcastReceiver() {
 
     private lateinit var context : Context
+    val  TAG = "startuptest"
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context?, intent: Intent?) {
 
         this.context = context!!
 
-        if (Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(intent?.getAction())) {
+        Log.d("startuptest", intent?.action!!)
+
+
+        if (Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(intent?.getAction()) ||
+            Intent.ACTION_BOOT_COMPLETED.equals(intent?.getAction())
+            || "startUp" == intent?.action) {
+
+
             Log.d("startuptest", "StartUpBootReceiver BOOT_COMPLETED")
-            createNotificationChannel(context)
+
+            //val serviceIntent = Intent(context, AthanService::class.java)
+            //serviceIntent.putExtra("input", "Hello")
+
+            //context.startForegroundService(serviceIntent)
+            //context.createDeviceProtectedStorageContext().startForegroundService(serviceIntent)
+
+            Log.d("startuptest", "Service called")
+
+
+            // for the task to be executed witout risking being interrupted by system
+            // we should use a service
+            //AthanService.enqueueWork(context, serviceIntent)
+            //Log.d("startuptest", "${prayers.size}")
+
+            //createNotificationChannel(context)
 
             // get prayer for today
             // date in "yyyy MMM dd" format
+
+            /*
             var now = System.currentTimeMillis()
 
             val df1 = SimpleDateFormat("yyyy-MM-dd")
             var dateStr = df1.format(now)
 
+            var prayers : List<Prayer> = ArrayList()
+
+            Log.d(TAG, "${prayers.size}")
+
             // request today's prayers
             val db = PrayerDatabase.getInstance(context)
             var prayerDao = db.prayerDao
+
+
             doAsync {
-                var prayers = prayerDao.loadByDay(dateStr)
+                prayers = prayerDao.loadByDay("2021-01-17")
+                Log.d(TAG, "${prayers.size}")
+
+                prayers = prayerDao.loadByDay("2021-01-17")
+
+                    Log.d(TAG, "${prayers.size}")
+
+
+
                 // schedule notifications
                 prayers.forEach { prayer ->
                     if(prayer.timestamp > now){
+                        Log.d(TAG, "${Date(prayer.timestamp)} ${prayer.name}")
                         scheduleNotifications(context, prayer.timestamp, prayer.name)
                     }
                 }
+
             }
+
+             */
         }
+
         /*
 
         if(intent?.action == "android.intent.action.BOOT_COMPLETED"){

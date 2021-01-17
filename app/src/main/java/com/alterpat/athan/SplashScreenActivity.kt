@@ -12,6 +12,7 @@ import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
+import java.util.*
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -39,11 +40,48 @@ class SplashScreenActivity : AppCompatActivity() {
         var todayStr = df1.format(System.currentTimeMillis())
 
         // get prayers for the whole current month
+        /*
        if(lastLoad != todayStr)
             getPrayers(todayStr, countryCode, zipCode, method, timeFormat, true)
        else
          startActivity(Intent(applicationContext, MainActivity::class.java))
 
+         */
+
+        test()
+
+    }
+
+    private fun test(){
+        doAsync {
+            val db = PrayerDatabase.getInstance(baseContext)
+            var prayerDao = db.prayerDao
+            prayerDao.clean()
+
+            var now = System.currentTimeMillis()
+
+
+            val d1 = Date(now + 2*6 * 10000)
+            val d2 = Date(now + 7*6 * 10000)
+            val d3 = Date(now + 9*6 * 10000)
+            val d4 = Date(now + 12*6 * 10000)
+            val d5 = Date(now + 18*6 * 10000)
+
+            System.out.println(d1)
+            System.out.println(d2)
+            System.out.println(d3)
+            System.out.println(d4)
+            System.out.println(d5)
+
+            prayerDao.insert( Prayer(d1.time,"2021-01-17", "00:00", "Test1"))
+            prayerDao.insert( Prayer(d2.time,"2021-01-17", "01:00", "Test2"))
+            prayerDao.insert( Prayer(d3.time,"2021-01-17", "02:00", "Test3"))
+            prayerDao.insert( Prayer(d4.time,"2021-01-17", "03:00", "Test4"))
+            prayerDao.insert( Prayer(d5.time,"2021-01-17", "04:00", "Test5"))
+
+            startActivity(Intent(applicationContext, MainActivity::class.java))
+
+        }
 
     }
 
