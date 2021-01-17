@@ -1,18 +1,10 @@
 package com.alterpat.athan
 
 import androidx.room.Room
-import com.alterpat.athan.dao.PrayerDao
 import com.alterpat.athan.dao.PrayerDatabase
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.junit.Before
-import org.junit.runner.RunWith
-import androidx.test.platform.app.InstrumentationRegistry
-
-import com.alterpat.athan.dao.Prayer
-import org.junit.After
-import java.io.IOException
 
 /**
  * Example local unit test, which will execute on the development machine (host).

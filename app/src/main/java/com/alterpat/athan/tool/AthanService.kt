@@ -1,15 +1,9 @@
 package com.alterpat.athan.tool
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.os.SystemClock
 import android.util.Log
-import androidx.core.app.JobIntentService
-import com.alterpat.athan.MainActivity
-import com.alterpat.athan.dao.Prayer
-import com.alterpat.athan.dao.PrayerDatabase
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.runOnUiThread
 import java.text.SimpleDateFormat
@@ -26,6 +20,10 @@ class AthanService : Service() {
 
     }
 
+    override fun onBind(p0: Intent?): IBinder? {
+        TODO("Not yet implemented")
+    }
+    /*
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val msg = intent?.getStringExtra("input")
         Log.d(TAG, "Started Service")
@@ -118,6 +116,6 @@ class AthanService : Service() {
 
      */
 
-
+*/
 
 }

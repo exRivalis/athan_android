@@ -726,6 +726,33 @@ public class PrayTime {
 
     }
 
+    /** return a hashMap prayerName: prayerTime **/
+    public static HashMap<String, String> getPrayerTimes(double latitude, double longitude, int timezone){
+        PrayTime prayers = new PrayTime();
+
+        prayers.setTimeFormat(prayers.Time24);
+        prayers.setCalcMethod(prayers.Makkah);
+        prayers.setAsrJuristic(prayers.Shafii);
+        prayers.setAdjustHighLats(prayers.MidNight);
+        int[] offsets = {0, 0, 0, 0, 0, 0, 0}; //
+        String[] prayerNames = {"Fajr","Duha","Dhuhr","Asr","Sunset","Maghrib","Isha"};
+        prayers.tune(offsets);
+
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+
+        ArrayList<String> prayerTimes = prayers.getPrayerTimes(cal,
+                latitude, longitude, timezone);
+
+        HashMap<String, String> prayerMap = new HashMap<>();
+        for(int i=0; i<prayerNames.length; i++){
+            prayerMap.put(prayerNames[i], prayerTimes.get(i));
+        }
+
+        return prayerMap;
+    }
+
     public int getCalcMethod() {
         return calcMethod;
     }
