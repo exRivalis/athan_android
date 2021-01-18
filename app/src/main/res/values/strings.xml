@@ -1,5 +1,15 @@
 <resources>
-    <string name="app_name">Athan</string>
-    <string name="athanSharedPrefs">athanPrefs</string>
-    <string name="userConfig">userConfig</string>
+    <string name="app_name" translatable="false">Athan</string>
+    <string name="athanSharedPrefs" translatable="false">athanPrefs</string>
+    <string name="userConfig" translatable="false">userConfig</string>
+    <string name="settings">Settings</string>
+    <string name="auto_detect">Auto Detect</string>
+    <string name="search_location">Search Location</string>
+    <string name="prayers">Prayers</string>
+    <string name="calculation_method">Calculation Method</string>
+    <string name="juristic_method">Juristic Method</string>
+    <string name="prayer_time_adjustment">Prayer Time Adjustment</string>
+    <string name="notifications">Notifications</string>
+    <string name="prayer_alert">Prayer Alert</string>
+    <string name="athan_selection">Athan Selection</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.alterpat.athan.dao
+package com.alterpat.athan.model
 
 class UserConfig(
     var city : String = "Fontenay-aux-roses",
@@ -11,7 +11,11 @@ class UserConfig(
     var juristic : Int = 0,
     var high_latitude : Int = 1,
     var fajrAngle : Double = 18.5,
-    var ishaAngle : Double = 17.0
+    var ishaAngle : Double = 17.0,
+    var prayerAdjustment: List<Int> = listOf(0, 0, 0, 0, 0),
+    var autoDetect : Boolean = false,
+    var prayerAlert : Boolean = true,
+    var athan : String = "Default"
 ) {
 
 

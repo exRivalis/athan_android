@@ -1,6 +1,7 @@
 package com.alterpat.athan
 
 import android.content.Context
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.ULocale
@@ -8,7 +9,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.alterpat.athan.dao.UserConfig
+import com.alterpat.athan.model.UserConfig
 import com.alterpat.athan.model.AthanItem
 import com.alterpat.athan.model.PrayerTime
 import com.alterpat.athan.tool.PrayerTimeManager
@@ -39,6 +40,9 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel(this)
 
 
+        settingsBtn.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         //townNameTV.text = city
 
         /** set hejir date **/

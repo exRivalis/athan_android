@@ -6,7 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.alterpat.athan.MainActivity.Companion.prayersNames
 import com.alterpat.athan.R
-import com.alterpat.athan.dao.UserConfig
+import com.alterpat.athan.model.UserConfig
 import com.google.gson.Gson
 
 
