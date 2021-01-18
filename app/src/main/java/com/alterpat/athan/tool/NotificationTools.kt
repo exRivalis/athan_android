@@ -28,8 +28,6 @@ private val NOTIFICATION_ID = 0
 // schedules a notification for firing at a specific day & time
 fun scheduleNotifications(context: Context, timestamp: Long, athan: String) {
 
-
-
     var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
         intent.action = "ATHAN_ALARM"
         intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)

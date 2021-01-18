@@ -4,26 +4,27 @@ import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.icu.util.ULocale
-import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider.getUriForFile
 import com.alterpat.athan.dao.UserConfig
-import com.alterpat.athan.tool.FileManager
 import com.alterpat.athan.tool.PrayTime
+import com.alterpat.athan.tool.PrayerTimeManager
 import com.alterpat.athan.tool.createNotificationChannel
+import com.alterpat.athan.tool.scheduleNotifications
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
+import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var countDownTimer: CountDownTimer
+    private lateinit var prayers : ArrayList<PrayerTime>
 
     companion object {
         val prayersNames = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
 
     }
-    private var timerSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,26 +73,76 @@ class MainActivity : AppCompatActivity() {
         else
             userConfig = UserConfig()
 
-        updateUI(userConfig)
+        // update UI & set alarms
+        init(userConfig)
 
 
     }
 
-    private fun updateUI(userConfig: UserConfig){
+    private fun init(userConfig: UserConfig){
         val latitude = userConfig.lat
         var longitude = userConfig.long
         val timezone = userConfig.timezone
 
-        val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(latitude, longitude, timezone)
+        val now = System.currentTimeMillis()
+        prayers = PrayerTimeManager.getPrayers(latitude, longitude, timezone)
 
-        prayersNames.forEach {prayerName ->
+        townNameTV.text = userConfig.city
+
+        prayers.forEach {prayer ->
+
+            /** add item to screen **/
             prayersLayout.addView(
                 AthanItem(
                     applicationContext,
-                    prayerName,
-                    prayerTimes.get(prayerName)!!
+                    prayer.name,
+                    prayer.timeStr
                 )
             )
+
+            /** program an alarm if not already past time **/
+            if (prayer.timestamp > now){
+                scheduleNotifications(this, prayer.timestamp, prayer.name)
+            }
         }
+    }
+
+    private fun startCountDown(){
+        val now = System.currentTimeMillis()
+        var timestamp : Long = abs(now - prayers[0].timestamp)
+
+        loop@
+        for(prayer in prayers){
+            if (prayer.timestamp > now){
+                timestamp = prayer.timestamp
+                break@loop
+            }
+        }
+
+        System.out.println("countdown started")
+        val countdown_timer = object : CountDownTimer(timestamp, 1000) {
+            override fun onFinish() {
+                startCountDown()
+            }
+            override fun onTick(p0: Long) {
+                val now = System.currentTimeMillis()
+                val t = (timestamp - now)/1000
+                val hours = t / (60 * 60)
+                val minutes = (t - hours*60*60) / 60
+                val seconds = (t - hours*60*60 - minutes*60)
+                //System.out.println("ticked: $t, $p0")
+                counterTV.text = "%02d:%02d:%02d".format(hours, minutes, seconds)//"%.${hours}f:$minutes:$seconds"
+            }
+        }.start()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // start count down to next prayer
+        startCountDown()
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 }

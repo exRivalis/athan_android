@@ -66,7 +66,7 @@
                     android:textColor="@color/colorText"
                     android:text="Prochaine prière"/>
 
-                <Chronometer
+                <TextView
                     android:id="@+id/counterTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
