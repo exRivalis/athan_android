@@ -52,7 +52,7 @@ class AthanReceiver : BroadcastReceiver() {
             userConfig = UserConfig()
 
         val latitude = userConfig.lat
-        var longitude = userConfig.long
+        var longitude = userConfig.lon
         val timezone = userConfig.timezone
 
         val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(latitude, longitude, timezone)

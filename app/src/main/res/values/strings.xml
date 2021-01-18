@@ -12,4 +12,6 @@
     <string name="notifications">Notifications</string>
     <string name="prayer_alert">Prayer Alert</string>
     <string name="athan_selection">Athan Selection</string>
+    <string name="search_failed_msg">Echec lors de la récupération des données</string>
+    <string name="choose_city">Choose a city</string>
 </resources>

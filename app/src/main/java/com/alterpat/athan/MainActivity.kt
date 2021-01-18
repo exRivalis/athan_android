@@ -86,11 +86,17 @@ class MainActivity : AppCompatActivity() {
         init(userConfig)
 
 
+        // on city click launch search activity
+        townNameTV.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
+
     }
 
     private fun init(userConfig: UserConfig){
         val latitude = userConfig.lat
-        var longitude = userConfig.long
+        var longitude = userConfig.lon
         val timezone = userConfig.timezone
 
         val now = System.currentTimeMillis()
@@ -114,6 +120,13 @@ class MainActivity : AppCompatActivity() {
             )
 
             /** program an alarm if not already past time **/
+
+            /***
+             *
+             * CAUTION: When changing conf YOU should delete all previously programmed alarms first
+             *
+             ***/
+
             if (prayer.timestamp >= now){
                 scheduleNotifications(this, prayer.timestamp, prayer.name)
             }
