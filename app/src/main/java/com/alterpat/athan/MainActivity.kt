@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             )
 
             /** program an alarm if not already past time **/
-            if (prayer.timestamp > now){
+            if (prayer.timestamp >= now){
                 scheduleNotifications(this, prayer.timestamp, prayer.name)
             }
         }

@@ -23,11 +23,17 @@ class AthanReceiver : BroadcastReceiver() {
             Intent.ACTION_BOOT_COMPLETED.equals(intent?.getAction())) {
 
             Log.d(TAG, "StartUpBootReceiver BOOT_COMPLETED")
-
+            /** read user configs and set remaining alarms at boot **/
             //createAlarms()
             //val res = FileManager.read()
+        }
 
-
+        // fire athan notification
+        if(intent?.action.equals("ATHAN_ALARM")){
+            var prayer = intent?.getStringExtra("prayer")
+            var title = "C'est l'heure de la prière du $prayer"
+            var content = "Ne remets pas la prière à plus tard!"
+            fireNotification(context, title, content, true)
         }
     }
 

@@ -16,6 +16,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.StrictMode
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.alterpat.athan.BuildConfig
 import com.alterpat.athan.MainActivity
@@ -32,7 +33,7 @@ fun scheduleNotifications(context: Context, timestamp: Long, athan: String) {
         intent.action = "ATHAN_ALARM"
         intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         intent.putExtra("prayer", athan)
-        PendingIntent.getBroadcast(context, timestamp.toInt(), intent, 0)
+        PendingIntent.getBroadcast(context, timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 
@@ -43,38 +44,9 @@ fun scheduleNotifications(context: Context, timestamp: Long, athan: String) {
         timestamp,
         alarmIntent
     )
+    //Log.d("AlarmManager", "fired")
+
 }
-
-fun scheduleNotifications(context: Context, month: Int, day: Int, hour: Int, minute: Int, athan: String) {
-    // Set the alarm to start
-    val calendar: Calendar = Calendar.getInstance().apply {
-        timeInMillis = System.currentTimeMillis()
-        set(Calendar.MONTH, Integer.max(0, month - 1))
-        set(Calendar.DAY_OF_MONTH, day)
-        set(Calendar.HOUR_OF_DAY, hour)
-        set(Calendar.MINUTE, minute)
-        set(Calendar.SECOND, 0)
-    }
-
-    val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-    var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
-        intent.action = "ATHAN_ALARM"
-        intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-        intent.putExtra("prayer", athan)
-        PendingIntent.getBroadcast(context, calendar.timeInMillis.toInt(), intent, 0)
-    }
-
-
-    var alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-    alarmMgr?.setExactAndAllowWhileIdle(
-        AlarmManager.RTC_WAKEUP,
-        calendar.timeInMillis,
-        alarmIntent
-    )
-}
-
 
 // create a notification channel to be able to fire notifications
 fun createNotificationChannel(context: Context) {
