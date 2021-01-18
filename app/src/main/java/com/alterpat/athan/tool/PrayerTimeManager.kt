@@ -2,7 +2,7 @@ package com.alterpat.athan.tool
 
 import android.icu.util.Calendar
 import com.alterpat.athan.MainActivity
-import com.alterpat.athan.PrayerTime
+import com.alterpat.athan.model.PrayerTime
 
 class PrayerTimeManager {
     companion object{
@@ -24,7 +24,13 @@ class PrayerTimeManager {
                     set(Calendar.SECOND, 0)
                 }.timeInMillis
 
-                prayers.add(PrayerTime(prayerName, timestamp, prayerTime))
+                prayers.add(
+                    PrayerTime(
+                        prayerName,
+                        timestamp,
+                        prayerTime
+                    )
+                )
             }
 
             return prayers

@@ -1,9 +1,8 @@
-package com.alterpat.athan
+package com.alterpat.athan.model
 
 import android.content.Context
-import android.view.View
-import android.view.ViewGroup
 import androidx.cardview.widget.CardView
+import com.alterpat.athan.R
 import kotlinx.android.synthetic.main.athan_item.view.*
 
 class AthanItem(context: Context, prayerName: String, prayerTime: String) : CardView(context) {

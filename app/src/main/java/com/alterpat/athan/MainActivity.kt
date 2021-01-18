@@ -9,7 +9,8 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.alterpat.athan.dao.UserConfig
-import com.alterpat.athan.tool.PrayTime
+import com.alterpat.athan.model.AthanItem
+import com.alterpat.athan.model.PrayerTime
 import com.alterpat.athan.tool.PrayerTimeManager
 import com.alterpat.athan.tool.createNotificationChannel
 import com.alterpat.athan.tool.scheduleNotifications
