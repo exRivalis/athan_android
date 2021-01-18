@@ -137,7 +137,8 @@ class MainActivity : AppCompatActivity() {
     private fun startCountDown(){
         val now = System.currentTimeMillis()
         // init with next Fajr time
-        var millisInFuture : Long = abs(now - prayers[0].timestamp)
+        Log.d(TAG, "${prayers[0].name} ${prayers[0].timeStr}")
+        var millisInFuture : Long = abs(now - (prayers[0].timestamp + 24*60*60*1000))
 
         // in case it's post Isha: millisInFututre won't change
         loop@
