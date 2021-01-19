@@ -13,13 +13,6 @@
         app:title="@string/choose_city"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"/>
-    -->
     <ListView
         android:id="@+id/searchListView"
         android:layout_marginTop="?attr/actionBarSize"
@@ -36,6 +29,6 @@
         android:paddingBottom="20dp"
         android:textColor="@color/colorText"
         android:textSize="18sp"
-        android:text="Nothing"/>
+        android:text="@string/city_not_found"/>
 
 </RelativeLayout>

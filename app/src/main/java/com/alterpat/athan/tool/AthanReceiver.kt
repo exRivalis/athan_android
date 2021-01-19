@@ -39,7 +39,7 @@ class AthanReceiver : BroadcastReceiver() {
 
     private fun createAlarms(){
         val sharedPref = context.getSharedPreferences(
-            context.getString(R.string.athanSharedPrefs), Context.MODE_PRIVATE
+            context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE
         )
         var gsonBuilder: Gson = Gson()
         var json: String? = sharedPref.getString(context.getString(R.string.userConfig), "")

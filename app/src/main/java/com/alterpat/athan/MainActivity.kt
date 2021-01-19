@@ -1,5 +1,6 @@
 package com.alterpat.athan
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
@@ -8,13 +9,15 @@ import android.icu.util.ULocale
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.alterpat.athan.model.UserConfig
 import com.alterpat.athan.model.AthanItem
 import com.alterpat.athan.model.PrayerTime
 import com.alterpat.athan.tool.PrayerTimeManager
+import com.alterpat.athan.tool.cancelScheduledNotification
 import com.alterpat.athan.tool.createNotificationChannel
-import com.alterpat.athan.tool.scheduleNotifications
+import com.alterpat.athan.tool.scheduleNotification
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
@@ -70,8 +73,30 @@ class MainActivity : AppCompatActivity() {
         //FileManager.write(userConf)
 
 
+        loadConfAndInit()
+
+
+        // on city click launch search activity
+        townNameTV.setOnClickListener {
+            resultLauncher.launch(Intent(this, SearchActivity::class.java))
+        }
+
+
+    }
+
+    // handle search activity result
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode === Activity.RESULT_OK) {
+            // There are no request codes
+            //val data: Intent? = result.data
+            // reload userConfig
+            loadConfAndInit()
+        }
+    }
+
+    private fun loadConfAndInit(){
         val sharedPref = getSharedPreferences(
-            "athanPrefs", Context.MODE_PRIVATE)
+            getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
         var gsonBuilder: Gson = Gson()
         var json: String? = sharedPref.getString("userConfig", "")
 
@@ -84,16 +109,21 @@ class MainActivity : AppCompatActivity() {
 
         // update UI & set alarms
         init(userConfig)
-
-
-        // on city click launch search activity
-        townNameTV.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
-
-
     }
 
+    private fun getAlarmId(athan : String) : Int {
+        var res = 0
+        when(athan){
+            "Fajr"      -> res = 1
+            "Duha"      -> res = 2
+            "Dhuhr"     -> res = 3
+            "Asr"       -> res = 4
+            "Maghrib"   -> res = 5
+            "Isha"      -> res = 6
+        }
+
+        return res
+    }
     private fun init(userConfig: UserConfig){
         val latitude = userConfig.lat
         var longitude = userConfig.lon
@@ -108,6 +138,8 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "notifications scheduled")
 
 
+        // clean it in case of reload
+        prayersLayout.removeAllViews()
         prayers.forEach {prayer ->
 
             /** add item to screen **/
@@ -126,9 +158,11 @@ class MainActivity : AppCompatActivity() {
              * CAUTION: When changing conf YOU should delete all previously programmed alarms first
              *
              ***/
+            cancelScheduledNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name))
+
 
             if (prayer.timestamp >= now){
-                scheduleNotifications(this, prayer.timestamp, prayer.name)
+                scheduleNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name))
             }
         }
 

@@ -27,13 +27,13 @@ private val NOTIFICATION_ID = 0
 
 
 // schedules a notification for firing at a specific day & time
-fun scheduleNotifications(context: Context, timestamp: Long, athan: String) {
+fun scheduleNotification(context: Context, timestamp: Long, athan: String,  alarmId: Int) {
 
     var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
         intent.action = "ATHAN_ALARM"
         intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         intent.putExtra("prayer", athan)
-        PendingIntent.getBroadcast(context, timestamp.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 
@@ -44,8 +44,20 @@ fun scheduleNotifications(context: Context, timestamp: Long, athan: String) {
         timestamp,
         alarmIntent
     )
-    //Log.d("AlarmManager", "fired")
+}
 
+// cancel an alarm
+fun cancelScheduledNotification(context: Context, timestamp: Long, athan: String, alarmId: Int) {
+
+    var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
+        intent.action = "ATHAN_ALARM"
+        intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+        intent.putExtra("prayer", athan)
+        PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+
+    var alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    alarmMgr.cancel(alarmIntent)
 }
 
 // create a notification channel to be able to fire notifications

@@ -1,30 +1,28 @@
 package com.alterpat.athan
 
-import android.app.SearchManager
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.alterpat.athan.adapter.CityAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.alterpat.athan.model.City
+import com.alterpat.athan.model.UserConfig
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.activity_search.toolbar
-import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.Exception
 import java.net.URL
 
+
 class SearchActivity : AppCompatActivity() {
-    private lateinit var mAdapter : CityAdapter
-    private lateinit var cities : ArrayList<City>
 
     private val TAG = "SearchActivityTag"
     private lateinit var adapter : ArrayAdapter<City>
@@ -43,30 +41,59 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-
-        cities = ArrayList()
-
-
-        /*
-        mAdapter = CityAdapter(cities)
-
-        searchRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = mAdapter
-        }
-         */
-
-
-
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
+        adapter = ArrayAdapter(this, R.layout.city_item)
         searchListView.adapter = adapter
-        searchListView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            Toast.makeText(this, "Search", Toast.LENGTH_LONG).show()
+
+        searchListView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, l ->
+            /** update UserConf and return finish activity for result **/
+            Toast.makeText(this, adapter.getItem(position).toString(), Toast.LENGTH_LONG).show()
+            updateUserConf(adapter.getItem(position)!!)
+            //finishActivity(Activity.RESULT_OK)
+            setResult(Activity.RESULT_OK)
+            finish()
+
         }
 
         searchListView.emptyView = emptyTextView
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        if(item.itemId ==android.R.id.home){
+            onBackPressed();
+        }
+
+        return true
+    }
+
+    private fun updateUserConf(city : City){
+        /** load userConf from shared prefs **/
+        val sharedPref = getSharedPreferences(
+            getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+        var gsonBuilder: Gson = Gson()
+        var json: String? = sharedPref.getString("userConfig", "")
+
+        var userConfig : UserConfig
+
+        if(json != "")
+            userConfig = gsonBuilder.fromJson(json, UserConfig::class.java)
+        else
+            userConfig = UserConfig()
+
+        /** update userConf **/
+        userConfig.city = city.name
+        userConfig.country = city.country
+        userConfig.state = city.state
+        userConfig.lat = city.lat
+        userConfig.lon = city.lon
+
+        /** update shared prefs **/
+        with (sharedPref.edit()) {
+            putString("userConfig", gsonBuilder.toJson(userConfig))
+            apply()
+        }
+
+    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
         val search = menu?.findItem(R.id.nav_search)
@@ -171,7 +198,7 @@ class SearchActivity : AppCompatActivity() {
     private fun requestCities( search:String){
         var format = "json"
         var addressDetails = 1 // or 0
-        var nbResults = 8
+        var nbResults = 14
 
         var baseUrl = "https://nominatim.openstreetmap.org/search?"
         var request = baseUrl +
@@ -179,6 +206,8 @@ class SearchActivity : AppCompatActivity() {
                 "&format=$format"+
                 "&addressdetails=$addressDetails"+
                 "&limit=$nbResults"
+
+        adapter.clear()
 
         doAsync {
             val respJsonStr = URL(request).readText()
@@ -200,6 +229,7 @@ class SearchActivity : AppCompatActivity() {
 
             if (success) {
                 val jsonArray = JSONArray(respJsonStr)
+                val addedNames = ArrayList<String>()
 
                 for (i in 0 until jsonArray.length()){
                     val jsonCity = jsonArray.get(i) as JSONObject
@@ -221,10 +251,16 @@ class SearchActivity : AppCompatActivity() {
                     var country = address.getString("country")
                     var city = City(lat, lon, cityName, state, country)
 
-                    cities.add(city)
-                    runOnUiThread{
-                        adapter.add(city)
+                    val cont = "$city$state$country"
+                    val added = cont in addedNames
+                    if(!added) {
+                        addedNames.add(cont)
+                        runOnUiThread{
+                            adapter.add(city)
+                        }
                     }
+
+
                 }
 
             } else {
