@@ -14,4 +14,6 @@
     <string name="athan_selection">Athan Selection</string>
     <string name="search_failed_msg">Echec lors de la récupération des données</string>
     <string name="choose_city">Choose a city</string>
+    <string name="app_label">Athan</string>
+    <string name="search_hint">Search City</string>
 </resources>

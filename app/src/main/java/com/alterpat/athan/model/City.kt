@@ -6,4 +6,7 @@ class City (var lat:Double,
             var state : String,
             var country : String) {
 
+    override fun toString(): String {
+        return "$name ,$state ,$country"
+    }
 }
