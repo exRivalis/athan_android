@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SearchView
@@ -208,6 +209,9 @@ class SearchActivity : AppCompatActivity() {
 
         adapter.clear()
 
+        // show progress bar while searching
+        progressIndicator.visibility = View.VISIBLE
+
         doAsync {
             val respJsonStr = URL(request).readText()
             var json : JSONObject
@@ -256,6 +260,8 @@ class SearchActivity : AppCompatActivity() {
                         addedNames.add(cont)
                         runOnUiThread{
                             adapter.add(city)
+                            // Done -> hide progress bar while searching
+                            progressIndicator.visibility = View.GONE
                         }
                     }
 
