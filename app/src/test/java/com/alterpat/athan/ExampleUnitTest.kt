@@ -1,7 +1,5 @@
 package com.alterpat.athan
 
-import androidx.room.Room
-import com.alterpat.athan.dao.PrayerDatabase
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -17,6 +15,7 @@ class ExampleUnitTest {
         assertEquals(4, 2 + 2)
     }
 }
+
 
 /*
 class SleepDatabaseTest {

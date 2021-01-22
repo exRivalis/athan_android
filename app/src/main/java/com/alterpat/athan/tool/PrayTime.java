@@ -727,12 +727,16 @@ public class PrayTime {
     }
 
     /** return a hashMap prayerName: prayerTime **/
-    public static HashMap<String, String> getPrayerTimes(double latitude, double longitude, int timezone){
+    public static HashMap<String, String> getPrayerTimes(double latitude, double longitude, int timezone, int calcMethod, int juristicMethod, String timeFormat){
         PrayTime prayers = new PrayTime();
 
-        prayers.setTimeFormat(prayers.Time24);
-        prayers.setCalcMethod(prayers.Makkah);
-        prayers.setAsrJuristic(prayers.Shafii);
+        if(timeFormat.equals("24H"))
+            prayers.setTimeFormat(prayers.Time24);
+        else
+            prayers.setTimeFormat(prayers.Time12);
+
+        prayers.setCalcMethod(calcMethod);
+        prayers.setAsrJuristic(juristicMethod);
         prayers.setAdjustHighLats(prayers.MidNight);
         int[] offsets = {0, 0, 0, 0, 0, 0, 0}; //
         String[] prayerNames = {"Fajr","Duha","Dhuhr","Asr","Sunset","Maghrib","Isha"};

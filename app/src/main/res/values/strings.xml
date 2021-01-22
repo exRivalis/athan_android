@@ -17,4 +17,5 @@
     <string name="search_hint">Search City</string>
     <string name="city_not_found">City not found</string>
     <string name="athan_prefs_key">athanPrefs</string>
+    <string name="location">Location</string>
 </resources>

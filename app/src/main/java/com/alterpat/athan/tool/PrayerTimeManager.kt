@@ -3,11 +3,18 @@ package com.alterpat.athan.tool
 import android.icu.util.Calendar
 import com.alterpat.athan.MainActivity
 import com.alterpat.athan.model.PrayerTime
+import com.alterpat.athan.model.UserConfig
 
 class PrayerTimeManager {
     companion object{
-        fun getPrayers(latitude: Double, longitude: Double, timezone: Int): ArrayList<PrayerTime>{
-            val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(latitude, longitude, timezone)
+        fun getPrayers(userConfig: UserConfig): ArrayList<PrayerTime>{
+            val latitude = userConfig.lat
+            var longitude = userConfig.lon
+            val timezone = userConfig.timezone
+            val calcMethod = userConfig.method
+            val juristicMethod = userConfig.juristic
+            val timeFormat = userConfig.timeFormat
+            val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(latitude, longitude, timezone, calcMethod, juristicMethod, timeFormat)
 
             var prayers = ArrayList<PrayerTime>()
 

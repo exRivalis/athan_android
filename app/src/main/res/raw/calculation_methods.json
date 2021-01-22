@@ -1,0 +1,51 @@
+[
+  {
+    "id": 0,
+    "description": "Jafari - Ithna Ashari",
+    "fajrAngle" : 16,
+    "fixed": false,
+    "ishaAngle": 17
+  },
+  {
+    "id": 1,
+    "description": "Karachi - University of Islamic Sciences, Karachi",
+    "fajrAngle" : 18,
+    "fixed": false,
+    "ishaAngle": 18
+  },
+  {
+    "id": 2,
+    "description": "ISNA - Islamic Society of North America",
+    "fajrAngle" : 15,
+    "fixed": false,
+    "ishaAngle": 15
+  },
+  {
+    "id": 3,
+    "description": "MWL - Muslim World League",
+    "fajrAngle" : 18,
+    "fixed": false,
+    "ishaAngle": 17
+  },
+  {
+    "id": 4,
+    "description": "Mecca - Umm Al-Qura",
+    "fajrAngle" : 18.5,
+    "fixed": true,
+    "ishaAngle": 90
+  },
+  {
+    "id": 5,
+    "description": "Egyptian General Authority of Survey",
+    "fajrAngle" : 19.5,
+    "fixed": false,
+    "ishaAngle": 17.5
+  },
+  {
+    "id": 6,
+    "description": "University of Tehran - Institute of Geophysics",
+    "fajrAngle" : 17.7,
+    "fixed": false,
+    "ishaAngle": 14
+  }
+]

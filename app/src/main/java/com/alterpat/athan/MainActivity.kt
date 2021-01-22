@@ -26,7 +26,6 @@ import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
     private lateinit var countdown_timer: CountDownTimer
-    private lateinit var countDownTimer: CountDownTimer
     private lateinit var prayers : ArrayList<PrayerTime>
     private val TAG = "MainActivityTag"
 
@@ -42,11 +41,6 @@ class MainActivity : AppCompatActivity() {
         // creates a notification channel if android version > Android O
         createNotificationChannel(this)
 
-
-        settingsBtn.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-        //townNameTV.text = city
 
         /** set hejir date **/
         // get current date in hejir
@@ -81,6 +75,9 @@ class MainActivity : AppCompatActivity() {
             resultLauncher.launch(Intent(this, SearchActivity::class.java))
         }
 
+        settingsBtn.setOnClickListener {
+            resultLauncher.launch(Intent(this, SettingsActivity::class.java))
+        }
 
     }
 
@@ -113,6 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getAlarmId(athan : String) : Int {
         var res = 0
+
         when(athan){
             "Fajr"      -> res = 1
             "Duha"      -> res = 2
@@ -124,15 +122,14 @@ class MainActivity : AppCompatActivity() {
 
         return res
     }
+
     private fun init(userConfig: UserConfig){
-        val latitude = userConfig.lat
-        var longitude = userConfig.lon
-        val timezone = userConfig.timezone
 
         val now = System.currentTimeMillis()
-        prayers = PrayerTimeManager.getPrayers(latitude, longitude, timezone)
+        prayers = PrayerTimeManager.getPrayers(userConfig)
 
         townNameTV.text = userConfig.city
+        //townNameTV.text = "\u06de \u0671\u0644\u0644\u0651\u064e\u0647\u064f \u0646\u064f\u0648\u0631\u064f \u0671\u0644]\u0633\u0651\u064e\u0645\u064e"
 
 
         Log.d(TAG, "notifications scheduled")

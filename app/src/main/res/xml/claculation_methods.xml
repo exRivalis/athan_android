@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<methods>
+    <method>
+        <id>0</id>
+        <description>Jafari - Ithna Ashari</description>
+        <fajr-angle>16</fajr-angle>
+        <isha-angle>14</isha-angle>
+    </method>
+    <method>
+        <id>1</id>
+        <description>Karachi - University of Islamic Sciences, Karachi</description>
+        <fajr-angle>18</fajr-angle>
+        <isha-angle>18</isha-angle>
+    </method>
+    <method>
+        <id>2</id>
+        <description>ISNA - Islamic Society of North America</description>
+        <fajr-angle>15</fajr-angle>
+        <isha-angle>15</isha-angle>
+    </method>
+    <method>
+        <id>3</id>
+        <description>MWL - Muslim World League</description>
+        <fajr-angle>18</fajr-angle>
+        <isha-angle>17</isha-angle>
+    </method>
+    <method>
+        <id>4</id>
+        <description>Mecca - Umm Al-Qura</description>
+        <fajr-angle>18.5</fajr-angle>
+        <isha-angle>90</isha-angle>
+    </method>
+    <method>
+        <id>5</id>
+        <description>Egyptian General Authority of Survey</description>
+        <fajr-angle>19.5</fajr-angle>
+        <isha-angle>17.5</isha-angle>
+    </method>
+    <method>
+        <id>6</id>
+        <description>University of Tehran - Institute of Geophysics</description>
+        <fajr-angle>17.7</fajr-angle>
+        <isha-angle>14</isha-angle>
+    </method>
+    <method>
+        <id>7</id>
+        <description>Custom</description>
+        <fajr-angle>18</fajr-angle>
+        <isha-angle>17</isha-angle>
+    </method>
+</methods>

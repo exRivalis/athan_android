@@ -74,7 +74,7 @@ fun createNotificationChannel(context: Context) {
             NotificationManager.IMPORTANCE_HIGH)
 
         notificationChannel.enableLights(true)
-        notificationChannel.lightColor = Color.WHITE
+        notificationChannel.lightColor = Color.GREEN
         notificationChannel.enableVibration(true)
 
         // Creating an Audio Attribute
@@ -90,7 +90,7 @@ fun createNotificationChannel(context: Context) {
                     + R.raw.athan)
 
         notificationChannel.setSound(uri, audioAttributes)
-        notificationChannel.setDescription("Athan");
+        notificationChannel.description = "Athan";
 
         mNotifyManager!!.createNotificationChannel(notificationChannel);
 
@@ -121,11 +121,14 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
         .setSmallIcon(R.drawable.ic_athan)
         .setContentIntent(notificationPendingIntent)
         .setAutoCancel(false)
+    notifyBuilder.setSound(uri, AudioManager.STREAM_MUSIC)
+
+    /*
     if(soundOn)
         notifyBuilder.setSound(uri, AudioManager.STREAM_MUSIC)
     else
         notifyBuilder.setSound(null)
-
+     */
 
     mNotifyManager.notify(0, notifyBuilder.build())
 }

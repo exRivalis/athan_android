@@ -51,11 +51,8 @@ class AthanReceiver : BroadcastReceiver() {
         else
             userConfig = UserConfig()
 
-        val latitude = userConfig.lat
-        var longitude = userConfig.lon
-        val timezone = userConfig.timezone
-
-        val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(latitude, longitude, timezone)
+        /*
+        val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(userConfig)
 
         Log.d(TAG, userConfig.city)
 
@@ -63,6 +60,8 @@ class AthanReceiver : BroadcastReceiver() {
             prayerTimes.get(prayerName)!!
 
         }
+
+         */
     }
 
 

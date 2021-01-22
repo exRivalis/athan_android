@@ -10,8 +10,14 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:paddingEnd="8dp"
         app:title="@string/choose_city"
         app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"/>
 
     <ListView
         android:id="@+id/searchListView"
@@ -21,6 +27,7 @@
 
     <TextView
         android:id="@+id/emptyTextView"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
