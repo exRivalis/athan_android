@@ -7,10 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.alterpat.athan.model.UserConfig
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_settings2.*
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var userConfig : UserConfig
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings2)
@@ -28,11 +31,61 @@ class SettingsActivity : AppCompatActivity() {
         calcMethod.setOnClickListener {
             startActivity(Intent(this, CalculationMethodActivity::class.java))
         }
+
+        juristicMethod.setOnClickListener {
+            showJuristicMethodDialog()
+        }
     }
 
     override fun onStart() {
         super.onStart()
         init()
+    }
+
+    private fun showJuristicMethodDialog(){
+        val singleItems = arrayOf("Standard (Shafi'i, Hanbali, Maliki)", "Hanafi")
+        val itemNames = arrayOf("Standard", "Hanafi")
+
+        val checkedItem = if (userConfig.juristic == "Standard") 0 else 1
+
+        var selectedJuristicDescription = userConfig.juristic
+        var selectedJuristicName = userConfig.juristicName
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.juristic_method))
+            .setNeutralButton(getString(R.string.cancel)) { dialog, which ->
+                // Respond to neutral button press
+
+            }
+            .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                // Respond to positive button press
+                updateUserConf(selectedJuristicName, selectedJuristicDescription)
+            }
+            // Single-choice items (initialized with checked item)
+            .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
+                // Respond to item chosen
+                selectedJuristicName = itemNames[which]
+                selectedJuristicDescription = singleItems[which]
+            }
+            .show()
+    }
+
+    private fun updateUserConf(juristic : String, description: String){
+        /** load userConf from shared prefs **/
+        val sharedPref = getSharedPreferences(
+            getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+        var gsonBuilder: Gson = Gson()
+
+        /** update userConf **/
+        userConfig.juristic = juristic
+        userConfig.juristicName = description
+
+        /** update shared prefs **/
+        with (sharedPref.edit()) {
+            putString("userConfig", gsonBuilder.toJson(userConfig))
+            apply()
+        }
+
     }
 
     private fun init(){
@@ -41,8 +94,6 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
         var gsonBuilder: Gson = Gson()
         var jsonConf: String? = sharedPref.getString("userConfig", "")
-
-        var userConfig : UserConfig
 
         if(jsonConf != "")
             userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)

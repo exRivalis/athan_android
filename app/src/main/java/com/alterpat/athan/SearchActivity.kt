@@ -94,6 +94,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
         val search = menu?.findItem(R.id.nav_search)
