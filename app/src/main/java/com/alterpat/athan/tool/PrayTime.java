@@ -52,6 +52,7 @@ public class PrayTime {
     private int Egypt; // Egyptian General Authority of Survey
     private int Custom; // Custom Setting
     private int Tehran; // Institute of Geophysics, University of Tehran
+    private int UOIF; // Union Des Organisations Islamiques De France
     // Juristic Methods
     private int Shafii; // Shafii (standard)
     private int Hanafi; // Hanafi
@@ -102,6 +103,7 @@ public class PrayTime {
         this.setEgypt(5); // Egyptian General Authority of Survey
         this.setTehran(6); // Institute of Geophysics, University of Tehran
         this.setCustom(7); // Custom Setting
+        this.setUOIF(8);
 
         // Juristic Methods
         this.setShafii(0); // Shafii (standard)
@@ -172,6 +174,10 @@ public class PrayTime {
         // MWL
         double[] MWvalues = {18,1,0,0,17};
         methodParams.put(Integer.valueOf(this.getMWL()), MWvalues);
+
+        // UOIF
+        double[] UOIFvalues = {12,1,0,0,12};
+        methodParams.put(Integer.valueOf(this.getUOIF()), UOIFvalues);
 
         // Makkah
         double[] MKvalues = {18.5,1,0,1,90};
@@ -726,8 +732,55 @@ public class PrayTime {
 
     }
 
+    private int getMethod(String method){
+        int res = 0;
+        switch (method){
+            case "Jafari": // Ithna Ashari
+                res = this.Jafari;
+                break;
+            case "Karachi": // University of Islamic Sciences, Karachi
+                res = this.Karachi;
+                break;
+            case "ISNA": // Islamic Society of North America (ISNA)
+                res = this.ISNA;
+                break;
+            case "MWL": // Muslim World League (MWL)
+                res = this.MWL;
+                break;
+            case "Makkah": // Umm al-Qura, Makkah
+                res = this.Makkah;
+                break;
+            case "Egypt": // Egyptian General Authority of Survey
+                res = this.Egypt;
+                break;
+            case "Custom": // Custom Setting
+                res = this.Custom;
+                break;
+            case "Tehran": // Institute of Geophysics, University of Tehran
+                res = this.Tehran;
+                break;
+            case "UOIF":
+                res = this.UOIF;
+                break;
+            default:
+                res = this.Makkah;
+        }
+        return res;
+    }
+
+    private int getJuristic(String method){
+        // Juristic Methods
+        int res = 0;
+        if(method.toLowerCase().equals("standard"))
+            res = this.Shafii;
+        else
+            res = this.Hanafi;
+
+        return res;
+    }
+
     /** return a hashMap prayerName: prayerTime **/
-    public static HashMap<String, String> getPrayerTimes(double latitude, double longitude, int timezone, int calcMethod, int juristicMethod, String timeFormat){
+    public static HashMap<String, String> getPrayerTimes(double latitude, double longitude, int timezone, String calcMethod, String juristicMethod, String timeFormat){
         PrayTime prayers = new PrayTime();
 
         if(timeFormat.equals("24H"))
@@ -735,8 +788,8 @@ public class PrayTime {
         else
             prayers.setTimeFormat(prayers.Time12);
 
-        prayers.setCalcMethod(calcMethod);
-        prayers.setAsrJuristic(juristicMethod);
+        prayers.setCalcMethod(prayers.getMethod(calcMethod));
+        prayers.setAsrJuristic(prayers.getJuristic(juristicMethod));
         prayers.setAdjustHighLats(prayers.MidNight);
         int[] offsets = {0, 0, 0, 0, 0, 0, 0}; //
         String[] prayerNames = {"Fajr","Duha","Dhuhr","Asr","Sunset","Maghrib","Isha"};
@@ -983,5 +1036,13 @@ public class PrayTime {
 
     public ArrayList<String> getTimeNames() {
         return timeNames;
+    }
+
+    public int getUOIF() {
+        return UOIF;
+    }
+
+    public void setUOIF(int UOIF) {
+        this.UOIF = UOIF;
     }
 }

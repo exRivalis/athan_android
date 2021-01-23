@@ -3,6 +3,7 @@ package com.alterpat.athan.model
 data class CalcMethod
     (
     val id: Int,
+    val name: String,
     val description: String,
     val fixed : Boolean = false,
     val fajrAngle: Double,

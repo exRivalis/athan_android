@@ -61,13 +61,13 @@ class CalculationMethodActivity : AppCompatActivity(), MethodClickListener {
         for(i  in 0 until json.length()){
             val calc = gsonBuilder.fromJson(json.getJSONObject(i).toString(), CalcMethod::class.java)
             //Log.d(TAG, calc.description)
-            if(calc.id == userConfig.method)
+            if(calc.name == userConfig.method)
                 calc.isSelected = true
 
             calcMethods.add(calc)
         }
 
-        calcMethods.add(CalcMethod(7, "Custom", false,0.0, 0.0))
+        calcMethods.add(CalcMethod(99, "Custom","Custom", false,0.0, 0.0))
 
         mAdapter.notifyDataSetChanged()
 
@@ -113,7 +113,7 @@ class CalculationMethodActivity : AppCompatActivity(), MethodClickListener {
 
         /** update userConf **/
         userConfig.methodName = method.description
-        userConfig.method = method.id
+        userConfig.method = method.name
         userConfig.fajrAngle = method.fajrAngle
         userConfig.ishaAngle = method.ishaAngle
         userConfig.fixed = method.fixed

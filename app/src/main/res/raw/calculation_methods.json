@@ -1,6 +1,7 @@
 [
   {
     "id": 0,
+    "name": "Jafari",
     "description": "Jafari - Ithna Ashari",
     "fajrAngle" : 16,
     "fixed": false,
@@ -8,6 +9,7 @@
   },
   {
     "id": 1,
+    "name": "Karachi",
     "description": "Karachi - University of Islamic Sciences, Karachi",
     "fajrAngle" : 18,
     "fixed": false,
@@ -15,6 +17,7 @@
   },
   {
     "id": 2,
+    "name": "ISNA",
     "description": "ISNA - Islamic Society of North America",
     "fajrAngle" : 15,
     "fixed": false,
@@ -22,6 +25,7 @@
   },
   {
     "id": 3,
+    "name": "MWL",
     "description": "MWL - Muslim World League",
     "fajrAngle" : 18,
     "fixed": false,
@@ -29,13 +33,15 @@
   },
   {
     "id": 4,
-    "description": "Mecca - Umm Al-Qura",
+    "name": "Makkah",
+    "description": "Makkah - Umm Al-Qura",
     "fajrAngle" : 18.5,
     "fixed": true,
     "ishaAngle": 90
   },
   {
     "id": 5,
+    "name": "Egypt",
     "description": "Egyptian General Authority of Survey",
     "fajrAngle" : 19.5,
     "fixed": false,
@@ -43,9 +49,18 @@
   },
   {
     "id": 6,
+    "name": "Tehran",
     "description": "University of Tehran - Institute of Geophysics",
     "fajrAngle" : 17.7,
     "fixed": false,
     "ishaAngle": 14
+  },
+  {
+    "id": 7,
+    "name": "UOIF",
+    "description": "UOIF - Union Des Organisations Islamiques De France",
+    "fajrAngle" : 12,
+    "fixed": false,
+    "ishaAngle": 12
   }
 ]
