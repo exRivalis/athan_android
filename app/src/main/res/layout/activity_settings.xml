@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/colorBackground"
     tools:context=".SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +18,7 @@
         android:fitsSystemWindows="true"
         android:outlineSpotShadowColor="@android:color/transparent"
         android:outlineAmbientShadowColor="@android:color/transparent"
-        android:background="@android:color/white">
+        android:background="@android:color/transparent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
