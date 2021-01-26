@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<LinearLayout
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:padding="10dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@color/colorBackground">
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="22dp"
+        android:paddingEnd="22dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/prayerNameTV"
@@ -16,7 +23,7 @@
             android:layout_weight="1"
             android:text="Fajr"
             android:textColor="@color/colorText"
-            android:textSize="15dp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView
@@ -26,13 +33,24 @@
             android:layout_gravity="center_vertical"
             android:text="06:15"
             android:textColor="@color/colorText"
-            android:textSize="15dp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp" />
-
+            android:id="@+id/soundCtrl"
+            android:clickable="true"
+            android:layout_width="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_sound_on"/>
     </LinearLayout>
+    <View style="@style/DividerThin"
+        android:visibility="gone"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_below="@+id/main"/>
+
+</RelativeLayout>
+
 
 

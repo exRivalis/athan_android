@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,21 +9,57 @@
     android:background="@color/colorBackground"
     tools:context=".SettingsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/white"
-        app:title="@string/settings"
-        app:layout_constraintTop_toTopOf="parent" >
+        android:layout_height="128dp"
+        android:elevation="0dp"
+        android:background="@android:color/white">
 
-    </androidx.appcompat.widget.Toolbar>
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:expandedTitleMarginStart="72dp"
+            app:expandedTitleMarginBottom="28dp"
+            android:elevation="0dp"
+            app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed">
 
-    <ScrollView
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:elevation="0dp">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_back"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings"
+                        android:layout_marginEnd="12dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+        <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,6 +133,7 @@
                             android:paddingStart="@dimen/settings_padding"
                             android:paddingEnd="@dimen/settings_padding"
                             android:text="Paris"
+                            android:fontFamily="@font/roboto_light"
                             android:textSize="@dimen/settings_item_text_size"
                             android:textColor="@color/colorTextSub"/>
                     </LinearLayout>
@@ -147,6 +186,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Umm Al-Qura Committee (UQU)"
+                            android:fontFamily="@font/roboto_light"
                             android:textSize="@dimen/settings_text_sub_size"
                             android:textColor="@color/colorTextSub"/>
                         <TextView
@@ -154,6 +194,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Fajr xx°, Isha yy°"
+                            android:fontFamily="@font/roboto_light"
                             android:textSize="@dimen/settings_text_sub_size"
                             android:textColor="@color/colorTextSub"/>
                     </LinearLayout>
@@ -179,6 +220,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Standard"
+                            android:fontFamily="@font/roboto_light"
                             android:textSize="@dimen/settings_text_sub_size"
                             android:textColor="@color/colorTextSub"/>
 
@@ -266,6 +308,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Al-Aqsa"
+                            android:fontFamily="@font/roboto_light"
                             android:textSize="@dimen/settings_text_sub_size"
                             android:textColor="@color/colorTextSub"/>
 
@@ -275,5 +318,7 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

@@ -9,14 +9,14 @@ import android.view.MenuItem
 import com.alterpat.athan.model.UserConfig
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_settings2.*
+import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var userConfig : UserConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings2)
+        setContentView(R.layout.activity_settings)
 
         setSupportActionBar(toolbar)
         //supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -24,16 +24,30 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
 
+        /** Search for a new location **/
         searchLocation.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
 
+        /** change calculation method **/
         calcMethod.setOnClickListener {
             startActivity(Intent(this, CalculationMethodActivity::class.java))
         }
 
+        /** change Asr juristic method **/
         juristicMethod.setOnClickListener {
             showJuristicMethodDialog()
+        }
+
+        /** change prayer call**/
+        athanSelection.setOnClickListener {
+            startActivity(Intent(this, AthanSelectionActivity::class.java))
+        }
+
+
+        /** switch sound on/off **/
+        prayerAlertSwitch.setOnClickListener{
+            updateSoundOn(prayerAlertSwitch.isChecked)
         }
     }
 
@@ -70,6 +84,22 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun updateSoundOn(soundOn: Boolean){
+        /** load userConf from shared prefs **/
+        val sharedPref = getSharedPreferences(
+            getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+        var gsonBuilder: Gson = Gson()
+
+        /** update userConf **/
+        userConfig.prayerAlert = soundOn
+
+        /** update shared prefs **/
+        with (sharedPref.edit()) {
+            putString("userConfig", gsonBuilder.toJson(userConfig))
+            apply()
+        }
+    }
+
     private fun updateUserConf(juristic : String, description: String){
         /** load userConf from shared prefs **/
         val sharedPref = getSharedPreferences(
@@ -85,6 +115,9 @@ class SettingsActivity : AppCompatActivity() {
             putString("userConfig", gsonBuilder.toJson(userConfig))
             apply()
         }
+
+        /*** update this activity **/
+        juristicMethodName.text = description
 
     }
 
@@ -109,6 +142,14 @@ class SettingsActivity : AppCompatActivity() {
             calcMethodDescription.text = "Fajr: ${userConfig.fajrAngle}°, Isha: ${userConfig.ishaAngle} minutes"
         else
             calcMethodDescription.text = "Fajr: ${userConfig.fajrAngle}°, Isha: ${userConfig.ishaAngle}°"
+
+
+        if(userConfig.prayerAlert)
+            prayerAlertSwitch.isChecked = true
+
+        if(userConfig.autoDetect)
+            autoLocationSwitch.isChecked = true
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

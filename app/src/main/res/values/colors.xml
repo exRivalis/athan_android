@@ -3,10 +3,12 @@
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#3B803E</color>
     <color name="colorAccent">#5EC562</color>
-    <color name="colorText">#222222</color>
+    <color name="colorText">#1E2E4E</color>
     <color name="colorBackground">#F5F5F5</color>
-    <!--<color name="colorTextSub">#616161</color>-->
+    <color name="colorPlay">#1E88E5</color>
+    <!--<color name="colorTextSub">#616161</color> 22222-->
     <color name="colorTextSub">#616161</color>
     <color name="background_color">#4CAF50</color>
+    <color name="section_title_color">#475778</color>
 
 </resources>

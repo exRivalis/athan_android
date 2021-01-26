@@ -1,5 +1,7 @@
 package com.alterpat.athan.model
 
+import com.alterpat.athan.R
+
 class UserConfig(
     var city : String = "Fontenay-aux-roses",
     var state : String = "Ile-de-France",
@@ -19,7 +21,8 @@ class UserConfig(
     var prayerAdjustment: List<Int> = listOf(0, 0, 0, 0, 0),
     var autoDetect : Boolean = false,
     var prayerAlert : Boolean = true,
-    var athan : String = "Default"
+    var athan : String = "Default",
+    var athanRes : Int = R.raw.athan
 ) {
 
 

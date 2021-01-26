@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Athan</string>
+    <string name="app_name" translatable="false">Adhan</string>
     <string name="userConfig" translatable="false">userConfig</string>
     <string name="settings">Settings</string>
     <string name="auto_detect">Auto Detect</string>
@@ -10,7 +10,7 @@
     <string name="prayer_time_adjustment">Prayer Time Adjustment</string>
     <string name="notifications">Notifications</string>
     <string name="prayer_alert">Prayer Alert</string>
-    <string name="athan_selection">Athan Selection</string>
+    <string name="athan_selection">Adhan Selection</string>
     <string name="search_failed_msg">Echec lors de la récupération des données</string>
     <string name="choose_city">Choose a city</string>
     <string name="app_label">Athan</string>

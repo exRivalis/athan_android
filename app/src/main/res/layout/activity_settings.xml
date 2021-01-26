@@ -1,260 +1,299 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".SettingsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:title="@string/settings"
-        app:layout_constraintTop_toTopOf="parent" >
-        <!--
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_back_24"
-            android:background="@drawable/circle_bg"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings"
-            android:paddingStart="22dp"
-            android:textSize="23sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"/>
-            -->
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true"
+        android:outlineSpotShadowColor="@android:color/transparent"
+        android:outlineAmbientShadowColor="@android:color/transparent"
+        android:background="@android:color/white">
 
-    <ScrollView
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:expandedTitleMarginStart="@dimen/settings_padding"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:title="@string/settings"
+                app:layout_collapseMode="pin"
+                android:elevation="0dp">
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+        <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/locationLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="LOCATION"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/settings_title_size"
-                    android:textColor="@color/colorText"/>
-
-                <View style="@style/Divider"
-                    android:layout_marginTop="3dp"/>
-
                 <LinearLayout
+                    android:id="@+id/locationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/auto_detect"
-                        android:textSize="@dimen/settings_item_text_size"
-                        android:textColor="@color/colorText"/>
-                    <Switch
-                        android:id="@+id/autoLocationSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:ignore="UseSwitchCompatOrMaterialXml" />
-                </LinearLayout>
-                <View style="@style/DividerThin"
-                    android:layout_marginTop="3dp"/>
-
-                <LinearLayout
-                    android:id="@+id/searchLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/search_location"
-                        android:textSize="@dimen/settings_item_text_size"
-                        android:textColor="@color/colorText"/>
-                    <TextView
-                        android:id="@+id/locationName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Paris"
-                        android:textSize="@dimen/settings_item_text_size"
-                        android:textColor="@color/colorTextSub"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/prayersLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/prayers"
-                    android:textAllCaps="true"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/settings_title_size"
-                    android:textColor="@color/colorText"/>
-                <View style="@style/Divider"
-                    android:layout_marginTop="3dp"/>
-                <LinearLayout
-                    android:id="@+id/calcMethod"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/calculation_method"
-                        android:textSize="@dimen/settings_item_text_size"
-                        android:textColor="@color/colorText"/>
-                    <TextView
-                        android:id="@+id/calcMethodName"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:layout_marginBottom="@dimen/settings_padding"
+                        android:text="@string/location"
+                        android:textStyle="normal"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/section_title_txt_size"
+                        android:textColor="@color/section_title_color"/>
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Umm Al-Qura Committee (UQU)"
-                        android:textSize="@dimen/settings_text_sub_size"
-                        android:textColor="@color/colorTextSub"/>
-                    <TextView
-                        android:id="@+id/calcMethodDescription"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/auto_detect"
+                            android:textSize="@dimen/settings_item_text_size"
+                            android:textColor="@color/colorText"/>
+                        <Switch
+                            android:id="@+id/autoLocationSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/searchLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fajr xx°, Isha yy°"
-                        android:textSize="@dimen/settings_text_sub_size"
-                        android:textColor="@color/colorTextSub"/>
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/settings_padding"
+                            android:paddingEnd="@dimen/settings_padding"
+                            android:text="@string/search_location"
+                            android:textSize="@dimen/settings_item_text_size"
+                            android:textColor="@color/colorText"/>
+                        <TextView
+                            android:id="@+id/locationName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:paddingStart="@dimen/settings_padding"
+                            android:paddingEnd="@dimen/settings_padding"
+                            android:text="Paris"
+                            android:fontFamily="@font/roboto_light"
+                            android:textSize="15sp"
+                            android:textColor="@color/colorTextSub"/>
+                    </LinearLayout>
+                    <View style="@style/DividerThin"
+                        android:layout_margin="@dimen/settings_padding"
+                        />
+
                 </LinearLayout>
-                <View style="@style/DividerThin"
-                    android:layout_marginTop="3dp"/>
+
                 <LinearLayout
-                    android:id="@+id/juristicMethod"
+                    android:id="@+id/prayersLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/juristic_method"
-                        android:textSize="@dimen/settings_item_text_size"
-                        android:textColor="@color/colorText"/>
-                    <TextView
-                        android:id="@+id/juristicMethodName"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:layout_marginBottom="@dimen/settings_padding"
+                        android:text="@string/prayers"
+                        android:textStyle="normal"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/section_title_txt_size"
+                        android:textColor="@color/section_title_color"/>
+
+                    <LinearLayout
+                        android:id="@+id/calcMethod"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Standard"
-                        android:textSize="@dimen/settings_text_sub_size"
-                        android:textColor="@color/colorTextSub"/>
-
-                </LinearLayout>
-                <View style="@style/DividerThin"
-                    android:layout_marginTop="3dp"/>
-                <TextView
-                    android:id="@+id/prayerTimeAdjust"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:text="@string/prayer_time_adjustment"
-                    android:textSize="@dimen/settings_item_text_size"
-                    android:textColor="@color/colorText"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/notificationLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/notifications"
-                    android:textAllCaps="true"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/settings_title_size"
-                    android:textColor="@color/colorText"/>
-                <View style="@style/Divider"
-                    android:layout_marginTop="3dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding">
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:clickable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/calculation_method"
+                            android:textSize="@dimen/settings_item_text_size"
+                            android:textColor="@color/colorText"/>
+                        <TextView
+                            android:id="@+id/calcMethodName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Umm Al-Qura Committee (UQU)"
+                            android:fontFamily="@font/roboto_light"
+                            android:textSize="@dimen/settings_text_sub_size"
+                            android:textColor="@color/colorTextSub"/>
+                        <TextView
+                            android:id="@+id/calcMethodDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fajr xx°, Isha yy°"
+                            android:fontFamily="@font/roboto_light"
+                            android:textSize="@dimen/settings_text_sub_size"
+                            android:textColor="@color/colorTextSub"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/juristicMethod"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/prayer_alert"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:clickable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/juristic_method"
+                            android:textSize="@dimen/settings_item_text_size"
+                            android:textColor="@color/colorText"/>
+                        <TextView
+                            android:id="@+id/juristicMethodName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Standard"
+                            android:fontFamily="@font/roboto_light"
+                            android:textSize="@dimen/settings_text_sub_size"
+                            android:textColor="@color/colorTextSub"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/prayerTimeAdjust"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding"
+                        android:clickable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:text="@string/prayer_time_adjustment"
                         android:textSize="@dimen/settings_item_text_size"
                         android:textColor="@color/colorText"/>
-                    <Switch
-                        android:id="@+id/prayerAlertSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:ignore="UseSwitchCompatOrMaterialXml" />
                 </LinearLayout>
+
                 <View style="@style/DividerThin"
-                    android:layout_marginTop="3dp"/>
+                    android:layout_margin="@dimen/settings_padding"
+                />
+
                 <LinearLayout
-                    android:id="@+id/athanSelection"
+                    android:id="@+id/notificationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:paddingTop="@dimen/settings_item_padding"
-                    android:paddingBottom="@dimen/settings_item_padding"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/athan_selection"
-                        android:textSize="@dimen/settings_item_text_size"
-                        android:textColor="@color/colorText"/>
-                    <TextView
-                        android:id="@+id/selectedAthanName"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:layout_marginBottom="@dimen/settings_padding"
+                        android:text="@string/notifications"
+                        android:textStyle="normal"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/section_title_txt_size"
+                        android:textColor="@color/section_title_color"/>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Al-Aqsa"
-                        android:textSize="@dimen/settings_text_sub_size"
-                        android:textColor="@color/colorTextSub"/>
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/prayer_alert"
+                            android:textSize="@dimen/settings_item_text_size"
+                            android:textColor="@color/colorText"/>
+                        <Switch
+                            android:id="@+id/prayerAlertSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/athanSelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingEnd="@dimen/settings_padding"
+                        android:clickable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:paddingTop="@dimen/settings_item_padding"
+                        android:paddingBottom="@dimen/settings_item_padding"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/athan_selection"
+                            android:textSize="@dimen/settings_item_text_size"
+                            android:textColor="@color/colorText"/>
+                        <TextView
+                            android:id="@+id/selectedAthanName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Al-Aqsa"
+                            android:fontFamily="@font/roboto_light"
+                            android:textSize="@dimen/settings_text_sub_size"
+                            android:textColor="@color/colorTextSub"/>
+
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

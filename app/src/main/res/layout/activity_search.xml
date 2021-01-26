@@ -13,6 +13,7 @@
         android:paddingEnd="8dp"
         app:title="@string/choose_city"
         app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressIndicator"
         android:layout_width="match_parent"

@@ -21,6 +21,8 @@ import androidx.core.app.NotificationCompat
 import com.alterpat.athan.BuildConfig
 import com.alterpat.athan.MainActivity
 import com.alterpat.athan.R
+import com.alterpat.athan.model.UserConfig
+import com.google.gson.Gson
 
 val CHANNEL_ID = "athan_notification_channel"
 private val NOTIFICATION_ID = 0
@@ -83,11 +85,23 @@ fun createNotificationChannel(context: Context) {
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .build()
 
+        /** load user conf **/
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+        var gsonBuilder: Gson = Gson()
+        var jsonConf: String? = sharedPref.getString("userConfig", "")
+        var userConfig : UserConfig
+        if(jsonConf != "")
+            userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
+        else
+            userConfig = UserConfig()
+
+        // load res id from userConf
         var uri = Uri.parse(
             "android.resource://"
-                    + context.getPackageName()
+                    + context.packageName
                     + "/"
-                    + R.raw.athan)
+                    + userConfig.athanRes)
 
         notificationChannel.setSound(uri, audioAttributes)
         notificationChannel.description = "Athan";
@@ -118,7 +132,7 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
     var notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
         .setContentTitle(title)
         .setContentText(content)
-        .setSmallIcon(R.drawable.ic_athan)
+        .setSmallIcon(R.mipmap.ic_notification)
         .setContentIntent(notificationPendingIntent)
         .setAutoCancel(false)
     notifyBuilder.setSound(uri, AudioManager.STREAM_MUSIC)

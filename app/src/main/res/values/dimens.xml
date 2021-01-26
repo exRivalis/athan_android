@@ -5,4 +5,8 @@
     <dimen name="settings_text_sub_size">15sp</dimen>
     <dimen name="settings_item_padding">12dp</dimen>
     <dimen name="settings_padding">20dp</dimen>
+    <dimen name="athan_play_btn">20dp</dimen>
+    <dimen name="athan_item_text">16sp</dimen>
+    <dimen name="athan_item_sub">12sp</dimen>
+    <dimen name="section_title_txt_size">12sp</dimen>
 </resources>
