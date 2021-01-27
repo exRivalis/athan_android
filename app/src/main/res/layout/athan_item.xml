@@ -3,17 +3,17 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorBackground">
+    android:layout_height="66dp"
+    android:gravity="center_vertical"
+    android:background="@android:color/transparent">
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:gravity="center_vertical"
         android:paddingStart="22dp"
-        android:paddingEnd="22dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:paddingEnd="22dp">
 
         <TextView
             android:id="@+id/prayerNameTV"
