@@ -22,7 +22,10 @@ class UserConfig(
     var autoDetect : Boolean = false,
     var prayerAlert : Boolean = true,
     var athan : String = "Default",
-    var athanRes : Int = R.raw.athan
+    var athanRes : Int = R.raw.al_hossaini,
+    var CHANNEL_ID : String = "athan_notification_channel",
+    var CHANNEL_ID_OLD : String = "athan_notification_channel"
+
 ) {
 
 

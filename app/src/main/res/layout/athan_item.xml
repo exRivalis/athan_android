@@ -5,15 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="66dp"
     android:gravity="center_vertical"
-    android:background="@android:color/transparent">
+    android:id="@+id/root"
+    android:background="@color/transparent">
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
+        android:layout_marginStart="@dimen/dp12"
+        android:layout_marginEnd="@dimen/dp12"
         android:gravity="center_vertical"
-        android:paddingStart="22dp"
-        android:paddingEnd="22dp">
+        android:paddingStart="@dimen/dp22"
+        android:paddingEnd="@dimen/dp22">
 
         <TextView
             android:id="@+id/prayerNameTV"
@@ -23,7 +26,7 @@
             android:layout_weight="1"
             android:text="Fajr"
             android:textColor="@color/colorText"
-            android:textSize="22sp"
+            android:textSize="@dimen/athan_item_txt_size"
             android:textStyle="bold" />
 
         <TextView
@@ -33,14 +36,14 @@
             android:layout_gravity="center_vertical"
             android:text="06:15"
             android:textColor="@color/colorText"
-            android:textSize="22sp"
+            android:textSize="@dimen/athan_item_txt_size"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/soundCtrl"
             android:clickable="true"
-            android:layout_width="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_width="@dimen/athan_sound_size"
+            android:layout_marginStart="@dimen/athan_sound_size"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_sound_on"/>
     </LinearLayout>

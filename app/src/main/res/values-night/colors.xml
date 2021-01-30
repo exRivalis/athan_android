@@ -5,6 +5,7 @@
     <color name="colorAccent">#5EC562</color>
     <color name="colorText">#CCC</color>
     <color name="colorBackground">#000000</color>
+    <color name="colorBottomSheet">#393939</color>
     <color name="colorPlay">#1E88E5</color>
     <!--<color name="colorTextSub">#616161</color> 22222-->
     <color name="colorTextSub">#616161</color>

@@ -6,11 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
-import android.graphics.Color
-import android.icu.text.DateFormat
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.Uri
@@ -23,8 +20,12 @@ import com.alterpat.athan.MainActivity
 import com.alterpat.athan.R
 import com.alterpat.athan.model.UserConfig
 import com.google.gson.Gson
+import java.lang.Exception
 
-val CHANNEL_ID = "athan_notification_channel"
+val TAG: String = "NotificationTool"
+//val CHANNEL_ID = "athan_notification_channel"
+val CHANNEL_NAME = "Athan Notification"
+val SILENT_CHANNEL_ID = "athan_notification_channel_silent"
 private val NOTIFICATION_ID = 0
 
 
@@ -64,19 +65,42 @@ fun cancelScheduledNotification(context: Context, timestamp: Long, athan: String
 
 // create a notification channel to be able to fire notifications
 fun createNotificationChannel(context: Context) {
-    var mNotifyManager = context.getSystemService(NotificationManager::class.java) as NotificationManager
+    var mNotifyManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+    /** load user conf **/
+    val sharedPref = context.getSharedPreferences(
+        context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+    var gsonBuilder: Gson = Gson()
+    var jsonConf: String? = sharedPref.getString("userConfig", "")
+    var userConfig : UserConfig
+    if(jsonConf != "")
+        userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
+    else
+        userConfig = UserConfig()
+
+    val CHANNEL_ID = userConfig.CHANNEL_ID
+    val CHANNEL_ID_OLD = userConfig.CHANNEL_ID_OLD
 
     // notification channels are only available in API 26 and higher
     // Create a NotificationChannel
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // delete previous notification channels
+        //try {
+            mNotifyManager.deleteNotificationChannel(CHANNEL_ID_OLD)
+            Log.d(TAG, "channel deleted")
+        //}catch (e: Exception){
+
+        //}
+
+        // recreate the notification channel
         val notificationChannel = NotificationChannel(
             CHANNEL_ID,
-            "Athan Notification",
+            CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH)
 
         notificationChannel.enableLights(true)
-        notificationChannel.lightColor = Color.GREEN
+        //notificationChannel.lightColor = Color.GREEN
         notificationChannel.enableVibration(true)
 
         // Creating an Audio Attribute
@@ -85,16 +109,6 @@ fun createNotificationChannel(context: Context) {
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .build()
 
-        /** load user conf **/
-        val sharedPref = context.getSharedPreferences(
-            context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
-        var gsonBuilder: Gson = Gson()
-        var jsonConf: String? = sharedPref.getString("userConfig", "")
-        var userConfig : UserConfig
-        if(jsonConf != "")
-            userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
-        else
-            userConfig = UserConfig()
 
         // load res id from userConf
         var uri = Uri.parse(
@@ -102,14 +116,24 @@ fun createNotificationChannel(context: Context) {
                     + context.packageName
                     + "/"
                     + userConfig.athanRes)
+        Log.d(TAG, "Notification channel recreated ${userConfig.athanRes}")
+        /*
+        var uri = Uri.parse(
+            "android.resource://"
+                    + context.packageName
+                    + "/"
+                    + R.raw.athan)
+         */
 
         notificationChannel.setSound(uri, audioAttributes)
         notificationChannel.description = "Athan";
 
-        mNotifyManager!!.createNotificationChannel(notificationChannel);
+        mNotifyManager.createNotificationChannel(notificationChannel)
+        Log.d(TAG, "channel created")
+
 
     } else {
-        TODO("VERSION.SDK_INT < O")
+        //TODO("VERSION.SDK_INT < O")
     }
 }
 
@@ -127,7 +151,26 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
 
     StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().build())
 
-    var uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + BuildConfig.APPLICATION_ID + "/" + R.raw.athan);
+    /** load user conf **/
+    val sharedPref = context.getSharedPreferences(
+        context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+    var gsonBuilder: Gson = Gson()
+    var jsonConf: String? = sharedPref.getString("userConfig", "")
+    var userConfig : UserConfig
+    if(jsonConf != "")
+        userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
+    else
+        userConfig = UserConfig()
+
+    val CHANNEL_ID = userConfig.CHANNEL_ID
+
+    //var uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + BuildConfig.APPLICATION_ID + "/" + userConfig.athanRes);
+// load res id from userConf
+    var uri = Uri.parse(
+        "android.resource://"
+                + context.packageName
+                + "/"
+                + userConfig.athanRes)
 
     var notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
         .setContentTitle(title)
@@ -143,6 +186,6 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
     else
         notifyBuilder.setSound(null)
      */
-
+    Log.d(TAG, "${userConfig.athanRes}")
     mNotifyManager.notify(0, notifyBuilder.build())
 }

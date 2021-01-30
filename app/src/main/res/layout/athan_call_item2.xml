@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingStart="30dp"
-    android:paddingEnd="20dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:paddingStart="@dimen/athan_item_pad_start"
+    android:paddingEnd="@dimen/athan_pad_top"
+    android:paddingTop="@dimen/athan_pad_top"
+    android:paddingBottom="@dimen/athan_pad_top"
     android:foreground="?selectableItemBackground"
     android:clickable="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -25,14 +25,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_selected"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="@dimen/athan_pad_top"/>
     <TextView
         android:id="@+id/athanLength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:gravity="end"
-        android:layout_marginStart="6dp"
         android:layout_weight="1"
         android:text="03:15"
         android:textColor="@color/colorText"
@@ -40,7 +39,7 @@
 
     <ImageButton
         android:id="@+id/playBtn"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="@dimen/athan_item_pad_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

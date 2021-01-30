@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingStart="30dp"
-    android:paddingEnd="30dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:paddingStart="@dimen/athan_item_pad_start"
+    android:paddingEnd="@dimen/athan_item_pad_start"
+    android:paddingTop="@dimen/athan_pad_top"
+    android:paddingBottom="@dimen/athan_pad_top"
     android:foreground="?selectableItemBackground"
     android:clickable="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -26,16 +26,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="6dp"
         android:text="03:15"
         android:textColor="@color/colorText"
         android:textSize="@dimen/athan_item_text" />
 
     <CheckBox
         android:id="@+id/checkbox"
-        android:layout_width="30dp"
+        android:layout_width="@dimen/athan_item_pad_start"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="@dimen/athan_pad_top"
         android:checked="false"
         android:visibility="gone"/>
 

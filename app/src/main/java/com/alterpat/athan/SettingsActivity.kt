@@ -155,10 +155,15 @@ class SettingsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         if(item.itemId ==android.R.id.home){
-            setResult(Activity.RESULT_OK)
-            finish()
+            onBackPressed()
         }
 
         return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 }

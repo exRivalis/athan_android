@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -66,7 +67,7 @@ class AthanSelectionActivity : AppCompatActivity(), PrayerCallClickListener {
         prayerCalls.add(PrayerCallItem("Bakir Bash", R.raw.bakir_bash, "05:47"))
         prayerCalls.add(PrayerCallItem("Hafez", R.raw.hafez, "02:46"))
         prayerCalls.add(PrayerCallItem("Hafiz Murad", R.raw.hafiz_murad, "01:42"))
-        prayerCalls.add(PrayerCallItem("Menshawi", R.raw.menshawi, "03:55"))
+        prayerCalls.add(PrayerCallItem("Menshawi", R.raw.menshaoui, "03:55"))
         prayerCalls.add(PrayerCallItem("Naghshbandi", R.raw.naghshbandi, "02:42"))
         prayerCalls.add(PrayerCallItem("Saber", R.raw.saber, "02:29"))
         prayerCalls.add(PrayerCallItem("Sharif Doman", R.raw.sharif_doman, "04:41"))
@@ -103,7 +104,7 @@ class AthanSelectionActivity : AppCompatActivity(), PrayerCallClickListener {
         mAdapter.notifyItemChanged(previousPosition)
         previousPosition = position
 
-        updateUserConf(item.athanName)
+        updateUserConf(item.athanName, item.resId)
     }
 
     /*
@@ -220,20 +221,27 @@ class AthanSelectionActivity : AppCompatActivity(), PrayerCallClickListener {
         return true
     }
 
-    private fun updateUserConf(athan : String){
+    private fun updateUserConf(athan : String, res: Int){
         /** load userConf from shared prefs **/
         val sharedPref = getSharedPreferences(
             getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
         var gsonBuilder: Gson = Gson()
 
+        Log.d("TESTINGSBEFORE", userConfig.athanRes.toString())
+
         /** update userConf **/
         userConfig.athan = athan
+        userConfig.athanRes = res
+        userConfig.CHANNEL_ID_OLD = userConfig.CHANNEL_ID
+        userConfig.CHANNEL_ID = "athan_notification_channel_$res"
 
         /** update shared prefs **/
         with (sharedPref.edit()) {
             putString("userConfig", gsonBuilder.toJson(userConfig))
             apply()
         }
+
+        Log.d("TESTINGSAFTER", userConfig.athanRes.toString())
 
         /** update notification channel **/
         createNotificationChannel(this)

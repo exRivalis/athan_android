@@ -22,7 +22,7 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="@dimen/collapsing_toolbar_height"
             app:expandedTitleMarginStart="@dimen/settings_padding"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
@@ -110,12 +110,12 @@
                             android:id="@+id/locationName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
+                            android:layout_marginTop="@dimen/settings_padding"
                             android:paddingStart="@dimen/settings_padding"
                             android:paddingEnd="@dimen/settings_padding"
                             android:text="Paris"
                             android:fontFamily="@font/roboto_light"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/settings_text_sub_size"
                             android:textColor="@color/colorTextSub"/>
                     </LinearLayout>
                     <View style="@style/DividerThin"
@@ -128,12 +128,12 @@
                     android:id="@+id/prayersLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/settings_padding"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/settings_padding"
+                        android:paddingStart="@dimen/settings_item_padding"
                         android:paddingEnd="@dimen/settings_padding"
                         android:layout_marginBottom="@dimen/settings_padding"
                         android:text="@string/prayers"
@@ -227,7 +227,7 @@
                     android:id="@+id/notificationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/settings_padding"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"

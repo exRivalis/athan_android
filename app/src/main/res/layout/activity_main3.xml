@@ -24,7 +24,7 @@
                 android:id="@+id/townNameTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
+                android:textSize="@dimen/main_town_txt_size"
                 android:textStyle="bold"
                 android:textColor="@color/colorText"
                 android:layout_weight="1"
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/timeLayout"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/main_image_pad"
             android:layout_centerHorizontal="true"
             android:src="@drawable/isha_bg" />
 
@@ -63,8 +63,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/settings_padding"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
+            android:paddingTop="@dimen/time_layout_pad"
+            android:paddingBottom="@dimen/time_layout_pad"
             android:layout_below="@id/toolbar"
             android:layout_gravity="center_horizontal">
             <TextView
@@ -72,11 +72,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:padding="8dp"
+                android:padding="@dimen/counter_padding_bottom"
                 android:gravity="center"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_16sp"
                 android:textColor="@color/colorText"
                 android:text="Prochaine prière"/>
 
@@ -84,12 +82,10 @@
                 android:id="@+id/counterTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
+                android:paddingBottom="@dimen/counter_padding_bottom"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:textSize="32sp"
+                android:textSize="@dimen/counter_text_size"
                 android:textStyle="bold"
                 android:textColor="@color/colorText"/>
         </LinearLayout>
@@ -103,7 +99,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:paddingTop="12dp"
-        app:layout_anchor="@id/prayersLayout"
+        app:layout_anchor="@id/bottomSheet"
         android:paddingBottom="12dp">
 
         <TextView
@@ -132,19 +128,28 @@
             android:textStyle="bold" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/prayersLayout"
+        android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/round_bg"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_peekHeight="80dp"
+        app:behavior_peekHeight="@dimen/peek_height"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="6dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="@dimen/bottom_sheet_padding">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/strip_margin"
+            android:src="@drawable/ic_bottom_sheet_tick"/>
+        <ListView
+            android:id="@+id/prayersLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:orientation="vertical"/>
+
         <!--
-
                 <include layout="@layout/athan_item" />
 
                 <include layout="@layout/athan_item" />
@@ -154,7 +159,7 @@
                 <include layout="@layout/athan_item" />
 
                 <include layout="@layout/athan_item" />
-                                -->
+            -->
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="settings_title_size">16sp</dimen>
+	<dimen name="settings_item_text_size">16sp</dimen>
+	<dimen name="settings_text_sub_size">15sp</dimen>
+	<dimen name="settings_item_padding">12dp</dimen>
+	<dimen name="settings_padding">20dp</dimen>
+	<dimen name="athan_play_btn">20dp</dimen>
+	<dimen name="athan_item_text">16sp</dimen>
+	<dimen name="athan_item_sub">12sp</dimen>
+	<dimen name="section_title_txt_size">12sp</dimen>
+	<dimen name="peek_height">102dp</dimen>
+	<dimen name="bottom_sheet_padding">10dp</dimen>
+	<dimen name="strip_margin">16dp</dimen>
+	<dimen name="counter_text_size">32sp</dimen>
+	<dimen name="counter_padding_bottom">8dp</dimen>
+	<dimen name="text_16sp">16sp</dimen>
+	<dimen name="time_layout_pad">12dp</dimen>
+	<dimen name="main_image_pad">50dp</dimen>
+	<dimen name="main_town_txt_size">24sp</dimen>
+	<dimen name="collapsing_toolbar_height">160dp</dimen>
+	<dimen name="toolbar_pad">8dp</dimen>
+	<dimen name="search_item_pad">20dp</dimen>
+	<dimen name="search_text_size">16sp</dimen>
+	<dimen name="splash_bg_size">400dp</dimen>
+	<dimen name="athan_item_pad_start">30dp</dimen>
+	<dimen name="athan_pad_top">20dp</dimen>
+	<dimen name="dp12">12dp</dimen>
+	<dimen name="dp22">22dp</dimen>
+	<dimen name="athan_item_txt_size">20sp</dimen>
+	<dimen name="athan_sound_size">20dp</dimen>
+	<dimen name="method_pad">20dp</dimen>
+	<dimen name="method_pad_top">8dp</dimen>
+	<dimen name="round_bg_radius">20dp</dimen>
+</resources>

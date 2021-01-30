@@ -5,9 +5,9 @@
         android:id="@+id/cityInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:paddingStart="@dimen/search_item_pad"
+        android:paddingTop="@dimen/search_item_pad"
+        android:paddingBottom="@dimen/search_item_pad"
         android:textColor="@color/colorText"
-        android:textSize="18sp"
+        android:textSize="@dimen/search_text_size"
         android:text="Paris, Ile de france, France"/>

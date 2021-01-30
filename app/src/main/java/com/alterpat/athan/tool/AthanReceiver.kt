@@ -31,8 +31,8 @@ class AthanReceiver : BroadcastReceiver() {
         // fire athan notification
         if(intent?.action.equals("ATHAN_ALARM")){
             var prayer = intent?.getStringExtra("prayer")
-            var title = "C'est l'heure de la prière du $prayer"
-            var content = "Ne remets pas la prière à plus tard!"
+            var title = "C'est l'heure du $prayer"
+            var content = "إِنَّ ٱلصَّلَوٰةَ كَانَتۡ عَلَى ٱلۡمُؤۡمِنِینَ كِتَـٰبࣰا مَّوۡقُوتࣰا" //"Ne remets pas la prière à plus tard!"
             fireNotification(context, title, content, true)
         }
     }

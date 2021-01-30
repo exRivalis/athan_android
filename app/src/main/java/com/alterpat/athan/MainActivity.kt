@@ -9,24 +9,33 @@ import android.icu.util.ULocale
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.alterpat.athan.model.UserConfig
+import androidx.core.content.ContextCompat
 import com.alterpat.athan.model.AthanItem
 import com.alterpat.athan.model.PrayerTime
+import com.alterpat.athan.model.SoundState
+import com.alterpat.athan.model.UserConfig
 import com.alterpat.athan.tool.PrayerTimeManager
 import com.alterpat.athan.tool.cancelScheduledNotification
 import com.alterpat.athan.tool.createNotificationChannel
 import com.alterpat.athan.tool.scheduleNotification
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
+import kotlinx.android.synthetic.main.activity_main3.*
+import org.jetbrains.anko.Android
 import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var athanItems: ArrayList<AthanItem>
     private lateinit var countdown_timer: CountDownTimer
     private lateinit var prayers : ArrayList<PrayerTime>
+    private lateinit var adapter : AthanAdapter
     private val TAG = "MainActivityTag"
 
     companion object {
@@ -127,6 +136,7 @@ class MainActivity : AppCompatActivity() {
 
         val now = System.currentTimeMillis()
         prayers = PrayerTimeManager.getPrayers(userConfig)
+        athanItems = ArrayList<AthanItem>()
 
         townNameTV.text = userConfig.city
         //townNameTV.text = "\u06de \u0671\u0644\u0644\u0651\u064e\u0647\u064f \u0646\u064f\u0648\u0631\u064f \u0671\u0644]\u0633\u0651\u064e\u0645\u064e"
@@ -135,19 +145,19 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "notifications scheduled")
 
 
-        // clean it in case of reload
-        prayersLayout.removeAllViews()
+
         prayers.forEach {prayer ->
+            athanItems.add(AthanItem(prayer.name, prayer.timeStr))
 
-            /** add item to screen **/
-            prayersLayout.addView(
-                AthanItem(
-                    applicationContext,
-                    prayer.name,
-                    prayer.timeStr
-                )
-            )
-
+            /*
+      prayersLayout.addView(
+          AthanItem(
+              applicationContext,
+              prayer.name,
+              prayer.timeStr
+          )
+      )
+       */
             /** program an alarm if not already past time **/
 
             /***
@@ -162,6 +172,13 @@ class MainActivity : AppCompatActivity() {
                 scheduleNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name))
             }
         }
+
+        scheduleNotification(this, System.currentTimeMillis()+1000, "test", getAlarmId("Fajr"))
+
+        /** add item to ListView **/
+        //athanItems[1].selected = true
+        adapter = AthanAdapter(this, athanItems)
+        prayersLayout.adapter = adapter
 
     }
 
@@ -224,5 +241,45 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         countdown_timer.cancel()
+    }
+
+    private class AthanAdapter(val context: Context, var athanItems: ArrayList<AthanItem>) : BaseAdapter() {
+        private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        // override other abstract methods here
+        override fun getView(position: Int, convertView: View?, container: ViewGroup?): View? {
+
+            var convertView: View? = convertView
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.athan_item, container, false)
+            }
+
+            convertView?.findViewById<TextView>(R.id.prayerNameTV)?.text = athanItems[position].prayerName
+            convertView?.findViewById<TextView>(R.id.prayerTimeTV)?.text = athanItems[position].prayerTime
+
+            when(athanItems[position].sound){
+                SoundState.ON -> null //convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setImageResource()
+                SoundState.OFF -> null
+                SoundState.BEEP -> null
+            }
+
+            when(athanItems[position].selected){
+                true -> convertView?.findViewById<View>(R.id.main)?.background = context.getDrawable(R.drawable.round_bg_gray)
+                false -> convertView?.findViewById<View>(R.id.main)?.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
+            }
+
+            return convertView
+        }
+
+        override fun getItem(position: Int): Any {
+            return athanItems[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getCount(): Int {
+            return athanItems.size
+        }
     }
 }
