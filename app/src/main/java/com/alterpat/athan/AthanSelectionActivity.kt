@@ -15,7 +15,7 @@ import com.alterpat.athan.adapter.PrayerCallClickListener
 import com.alterpat.athan.adapter.PrayerCallsAdapter
 import com.alterpat.athan.model.PrayerCallItem
 import com.alterpat.athan.model.UserConfig
-import com.alterpat.athan.tool.createNotificationChannel
+import com.alterpat.athan.tool.createNotificationChannels
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_adhan_selection.*
 import org.jetbrains.anko.doAsync
@@ -244,6 +244,6 @@ class AthanSelectionActivity : AppCompatActivity(), PrayerCallClickListener {
         Log.d("TESTINGSAFTER", userConfig.athanRes.toString())
 
         /** update notification channel **/
-        createNotificationChannel(this)
+        createNotificationChannels(this)
     }
 }

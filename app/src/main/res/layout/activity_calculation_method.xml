@@ -23,6 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/collapsing_toolbar_height"
             app:expandedTitleMarginStart="@dimen/settings_padding"
+            app:contentScrim="@color/colorBackground"
+            app:statusBarScrim="@color/colorBackground"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
             app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed">

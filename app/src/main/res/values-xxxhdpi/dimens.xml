@@ -9,9 +9,9 @@
 	<dimen name="athan_item_text">20sp</dimen>
 	<dimen name="athan_item_sub">15sp</dimen>
 	<dimen name="section_title_txt_size">15sp</dimen>
-	<dimen name="peek_height">127.5dp</dimen>
+	<dimen name="peek_height">125dp</dimen>
 	<dimen name="bottom_sheet_padding">12.5dp</dimen>
-	<dimen name="strip_margin">20dp</dimen>
+	<dimen name="bottom_sheet_tick_margin">12.5dp</dimen>
 	<dimen name="counter_text_size">40sp</dimen>
 	<dimen name="counter_padding_bottom">10dp</dimen>
 	<dimen name="text_16sp">20sp</dimen>
@@ -21,7 +21,7 @@
 	<dimen name="dp12">15dp</dimen>
 	<dimen name="dp22">27.5dp</dimen>
 	<dimen name="athan_pad_top">25dp</dimen>
-	<dimen name="round_bg_radius">25dp</dimen>
+	<dimen name="round_bg_radius">32.5dp</dimen>
 	<dimen name="search_item_pad">25dp</dimen>
 	<dimen name="toolbar_pad">10dp</dimen>
 	<dimen name="athan_item_pad_start">37.5dp</dimen>

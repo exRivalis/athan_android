@@ -1,11 +1,11 @@
 <resources>
 	<dimen name="counter_padding_bottom">3.3dp</dimen>
 	<dimen name="athan_play_btn">8.3dp</dimen>
-	<dimen name="strip_margin">6.7dp</dimen>
+	<dimen name="bottom_sheet_tick_margin">4.2dp</dimen>
 	<dimen name="bottom_sheet_padding">4.2dp</dimen>
 	<dimen name="settings_padding">8.3dp</dimen>
 	<dimen name="time_layout_pad">5dp</dimen>
-	<dimen name="peek_height">42.5dp</dimen>
+	<dimen name="peek_height">41.7dp</dimen>
 	<dimen name="settings_item_padding">5dp</dimen>
 	<dimen name="main_image_pad">20.8dp</dimen>
 	<dimen name="settings_item_text_size">6.7sp</dimen>
@@ -30,6 +30,6 @@
 	<dimen name="athan_sound_size">8.3dp</dimen>
 	<dimen name="method_pad">8.3dp</dimen>
 	<dimen name="method_pad_top">3.3dp</dimen>
-	<dimen name="round_bg_radius">8.3dp</dimen>
+	<dimen name="round_bg_radius">10.8dp</dimen>
 	<dimen name="athan_item_height">27.5dp</dimen>
 </resources>

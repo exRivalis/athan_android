@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,12 +17,14 @@
         android:fitsSystemWindows="true"
         android:outlineSpotShadowColor="@android:color/transparent"
         android:outlineAmbientShadowColor="@android:color/transparent"
-        android:background="@android:color/transparent">
+        android:background="@color/colorBackground">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/collapsing_toolbar_height"
             app:expandedTitleMarginStart="@dimen/settings_padding"
+            app:contentScrim="@color/colorBackground"
+            app:statusBarScrim="@color/colorBackground"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
             app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed">
@@ -36,7 +37,6 @@
                 app:layout_collapseMode="pin"
                 android:elevation="0dp">
             </com.google.android.material.appbar.MaterialToolbar>
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

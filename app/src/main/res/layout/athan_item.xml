@@ -41,7 +41,6 @@
 
         <ImageView
             android:id="@+id/soundCtrl"
-            android:clickable="true"
             android:layout_width="@dimen/athan_sound_size"
             android:layout_marginStart="@dimen/athan_sound_size"
             android:layout_height="wrap_content"

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.alterpat.athan.MainActivity.Companion.prayersNames
 import com.alterpat.athan.R
+import com.alterpat.athan.model.SoundState
 import com.alterpat.athan.model.UserConfig
 import com.google.gson.Gson
 
@@ -30,10 +31,17 @@ class AthanReceiver : BroadcastReceiver() {
 
         // fire athan notification
         if(intent?.action.equals("ATHAN_ALARM")){
-            var prayer = intent?.getStringExtra("prayer")
-            var title = "C'est l'heure du $prayer"
-            var content = "إِنَّ ٱلصَّلَوٰةَ كَانَتۡ عَلَى ٱلۡمُؤۡمِنِینَ كِتَـٰبࣰا مَّوۡقُوتࣰا" //"Ne remets pas la prière à plus tard!"
-            fireNotification(context, title, content, true)
+            val prayer = intent?.getStringExtra("prayer")
+            val title = "C'est l'heure du $prayer"
+            //val soundState: SoundState = intent!!.extras!!.getSerializable("soundState") as SoundState
+            val soundStateInt = intent?.getIntExtra("soundStateInt", 1)
+            val content = "إِنَّ ٱلصَّلَوٰةَ كَانَتۡ عَلَى ٱلۡمُؤۡمِنِینَ كِتَـٰبࣰا مَّوۡقُوتࣰا" //"Ne remets pas la prière à plus tard!"
+
+            when(soundStateInt){
+                -1 -> fireNotification(context, title, content, SoundState.OFF)
+                0 -> fireNotification(context, title, content, SoundState.BEEP)
+                1 -> fireNotification(context, title, content, SoundState.ON)
+            }
         }
     }
 

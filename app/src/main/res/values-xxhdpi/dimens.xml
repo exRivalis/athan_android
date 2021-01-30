@@ -9,9 +9,9 @@
 	<dimen name="athan_item_text">16sp</dimen>
 	<dimen name="athan_item_sub">12sp</dimen>
 	<dimen name="section_title_txt_size">12sp</dimen>
-	<dimen name="peek_height">102dp</dimen>
+	<dimen name="peek_height">100dp</dimen>
 	<dimen name="bottom_sheet_padding">10dp</dimen>
-	<dimen name="strip_margin">16dp</dimen>
+	<dimen name="bottom_sheet_tick_margin">10dp</dimen>
 	<dimen name="counter_text_size">32sp</dimen>
 	<dimen name="counter_padding_bottom">8dp</dimen>
 	<dimen name="text_16sp">16sp</dimen>
@@ -31,7 +31,7 @@
 	<dimen name="athan_sound_size">20dp</dimen>
 	<dimen name="method_pad">20dp</dimen>
 	<dimen name="method_pad_top">8dp</dimen>
-	<dimen name="round_bg_radius">20dp</dimen>
+	<dimen name="round_bg_radius">26dp</dimen>
 	<dimen name="athan_item_height">66dp</dimen>
 
 </resources>

@@ -50,6 +50,7 @@
             android:background="@drawable/complex_bg" />
 
         <ImageView
+            android:id="@+id/mainBg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/timeLayout"
@@ -110,8 +111,9 @@
             android:paddingStart="20dp"
             android:paddingEnd="12dp"
             android:text="Aujourd'hui"
+            android:background="@drawable/round_bg_neutral"
             android:textColor="@color/colorText"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_16sp" />
 
         <TextView
             android:id="@+id/dateTV"
@@ -123,8 +125,9 @@
             android:paddingStart="20dp"
             android:paddingEnd="12dp"
             android:text="26 Jumada Al-Awwal, 1442"
+            android:background="@drawable/round_bg_neutral"
             android:textColor="@color/colorText"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_16sp"
             android:textStyle="bold" />
     </LinearLayout>
     <RelativeLayout
@@ -141,7 +144,7 @@
             android:id="@+id/tick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/strip_margin"
+            android:layout_marginTop="@dimen/bottom_sheet_tick_margin"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_bottom_sheet_tick"/>
         <ListView
@@ -151,12 +154,48 @@
             android:layout_below="@+id/tick"
             android:divider="@android:color/transparent"
             android:orientation="vertical"/>
-        <include
-            android:id="@+id/nextPrayerItem"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/athan_item_height"
-            layout="@layout/athan_item"
-            android:layout_below="@+id/tick"/>
+
+            <LinearLayout
+                android:id="@+id/nextPrayerItem"
+                android:layout_below="@+id/tick"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/athan_item_height"
+                android:background="@color/colorBottomSheet"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp22"
+                android:paddingEnd="@dimen/dp22">
+
+                <TextView
+                    android:id="@+id/prayerNameTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/dp12"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@color/colorText"
+                    android:textSize="@dimen/athan_item_txt_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/prayerTimeTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/colorText"
+                    android:textSize="@dimen/athan_item_txt_size"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/soundCtrl"
+                    android:layout_width="@dimen/athan_sound_size"
+                    android:layout_marginStart="@dimen/athan_sound_size"
+                    android:layout_marginEnd="@dimen/dp12"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_sound_on"/>
+            </LinearLayout>
 
 
 

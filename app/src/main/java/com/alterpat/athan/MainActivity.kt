@@ -13,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,12 +25,12 @@ import com.alterpat.athan.model.SoundState
 import com.alterpat.athan.model.UserConfig
 import com.alterpat.athan.tool.PrayerTimeManager
 import com.alterpat.athan.tool.cancelScheduledNotification
-import com.alterpat.athan.tool.createNotificationChannel
+import com.alterpat.athan.tool.createNotificationChannels
 import com.alterpat.athan.tool.scheduleNotification
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main3.*
-import org.jetbrains.anko.Android
+import kotlinx.android.synthetic.main.activity_main3.prayersLayout
 import kotlin.math.abs
 
 
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main3)
 
         // creates a notification channel if android version > Android O
-        createNotificationChannel(this)
+        createNotificationChannels(this)
 
 
         /** set hejir date **/
@@ -146,12 +148,12 @@ class MainActivity : AppCompatActivity() {
         var res = 0
 
         when(athan){
-            "Fajr"      -> res = 1
-            "Duha"      -> res = 2
-            "Dhuhr"     -> res = 3
-            "Asr"       -> res = 4
-            "Maghrib"   -> res = 5
-            "Isha"      -> res = 6
+            prayersNames[0] -> res = 1
+            prayersNames[1] -> res = 2
+            prayersNames[2] -> res = 3
+            prayersNames[3] -> res = 4
+            prayersNames[4] -> res = 5
+            prayersNames[5] -> res = 6
         }
 
         return res
@@ -170,19 +172,23 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "notifications scheduled")
 
 
+        /** load userConf from shared prefs **/
+        val sharedPref = getSharedPreferences(
+            getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+        var gsonBuilder: Gson = Gson()
+
+        var jsonConf: String? = sharedPref.getString("userConfig", "")
+        var userConfig : UserConfig
+        if(jsonConf != "")
+            userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
+        else
+            userConfig = UserConfig()
 
         prayers.forEach {prayer ->
-            athanItems.add(AthanItem(prayer.name, prayer.timeStr))
+            val position = prayers.indexOf(prayer)
+            val soundState = userConfig.prayerSoundCtl[position]
+            athanItems.add(AthanItem(prayer.name, prayer.timeStr, soundState))
 
-            /*
-      prayersLayout.addView(
-          AthanItem(
-              applicationContext,
-              prayer.name,
-              prayer.timeStr
-          )
-      )
-       */
             /** program an alarm if not already past time **/
 
             /***
@@ -194,21 +200,74 @@ class MainActivity : AppCompatActivity() {
 
 
             if (prayer.timestamp >= now){
-                scheduleNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name))
+                scheduleNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name), soundState)
             }
         }
 
-        //scheduleNotification(this, System.currentTimeMillis()+1000, "test", getAlarmId("Fajr"))
+        //scheduleNotification(this, System.currentTimeMillis()+500, "test", getAlarmId("Fajr"), SoundState.OFF)
+        //scheduleNotification(this, System.currentTimeMillis()+1500, "test", getAlarmId("Fajr"), SoundState.BEEP)
 
         /** add item to ListView **/
         //athanItems[1].selected = true
         adapter = AthanAdapter(this, athanItems)
         prayersLayout.adapter = adapter
 
+        /** on click change prayer call : ON, OFF or BEEP sound & update userConf **/
+        prayersLayout.setOnItemClickListener { parent, view, position, id ->
+            var athanItem  = athanItems[position]
+            when(athanItem.sound){
+                SoundState.ON -> {
+                    athanItems[position].sound = SoundState.BEEP
+                    Toast.makeText(applicationContext, getString(R.string.athan_switche_beep)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
+                }
+                SoundState.BEEP -> {
+                    athanItems[position].sound = SoundState.OFF
+                    Toast.makeText(applicationContext, getString(R.string.athan_switched_off)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
+                }
+                SoundState.OFF -> {
+                    athanItems[position].sound = SoundState.ON
+                    Toast.makeText(applicationContext, getString(R.string.athan_switched_on)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
+                }
+            }
+            adapter.notifyDataSetChanged()
+
+            if(athanItem.prayerName == nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text)
+                updateNextPrayerUI(athanItem)
+
+            // update userConf
+            updateUserConfCalls(position, athanItems[position].sound)
+        }
     }
 
+    private fun updateUserConfCalls(position: Int, soundState: SoundState){
+        /** load userConf from shared prefs **/
+        val sharedPref = getSharedPreferences(
+            getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+        var gsonBuilder: Gson = Gson()
+
+        var jsonConf: String? = sharedPref.getString("userConfig", "")
+        var userConfig : UserConfig
+        if(jsonConf != "")
+            userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
+        else
+            userConfig = UserConfig()
+
+        /** update userConf **/
+        var array = userConfig.prayerSoundCtl.toTypedArray()
+        array[position] = soundState
+        userConfig.prayerSoundCtl = array.toList()
+
+        /** save to shared prefs **/
+        with (sharedPref.edit()) {
+            putString("userConfig", gsonBuilder.toJson(userConfig))
+            apply()
+        }
+
+    }
     private fun startCountDown(){
         val now = System.currentTimeMillis()
+        var nextPrayer : PrayerTime = PrayerTime("Fajr", prayers[0].timestamp + 24*60*60*1000, prayers[0].timeStr)
+
         // init with next Fajr time
         Log.d(TAG, "${prayers[0].name} ${prayers[0].timeStr}")
         var millisInFuture : Long = abs(now - (prayers[0].timestamp + 24*60*60*1000))
@@ -218,12 +277,21 @@ class MainActivity : AppCompatActivity() {
         for(prayer in prayers){
             if (prayer.timestamp >= now){
                 millisInFuture = prayer.timestamp - now
+                nextPrayer = prayer
 
                 // update nextPrayerItem
                 nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text = prayer.name
                 nextPrayerItem.findViewById<TextView>(R.id.prayerTimeTV).text = prayer.timeStr
+
+                // set sound icon
+                updateNextPrayerUI(athanItems[prayers.indexOf(prayer)])
+
+                athanItems.map { it.selected = false }
                 athanItems[prayers.indexOf(prayer)].selected = true
                 adapter.notifyDataSetChanged()
+
+                // update background image
+                updateBackground(nextPrayer, millisInFuture)
 
                 break@loop
             }
@@ -245,15 +313,84 @@ class MainActivity : AppCompatActivity() {
                 */
             }
             override fun onTick(remaining: Long) {
-                val t = remaining/1000
+                val t = remaining/1000 // this is now in seconds
                 val hours = t / (60 * 60)
                 val minutes = (t - hours*60*60) / 60
                 val seconds = (t - hours*60*60 - minutes*60)
                 counterTV.text = "%02d:%02d:%02d".format(hours, minutes, seconds)
+
+                // update background image 15, 30 minutes before nextPrayer
+                when(remaining){
+                    15 * 60L, 30 * 60L -> updateBackground(nextPrayer, remaining)
+                }
+
             }
         }.start()
     }
 
+
+    /** set the right background image at the right time **/
+    private fun updateBackground(nextPrayer: PrayerTime, millisInFuture: Long){
+        val now = System.currentTimeMillis()
+
+        when(nextPrayer?.name){
+            prayersNames[0] -> {
+                // fajr is next in less than 30 minutes
+                //TODO change first one to fajr_bg when desigend
+                if(millisInFuture <= 30 * 60 * 1000L)
+                    mainBg.setImageResource(R.drawable.isha_bg)
+                else
+                    mainBg.setImageResource(R.drawable.isha_bg)
+            }
+            prayersNames[1] -> {
+                //TODO change second one to fajr_bg when desigend
+                // shuruq is next in less than 15 minutes
+                if(millisInFuture <= 15 * 60 * 1000)
+                    mainBg.setImageResource(R.drawable.shuruq)
+                else
+                    mainBg.setImageResource(R.drawable.isha_bg)
+            }
+            prayersNames[2] -> {
+                // dhohr is next & shuruq is less than 30 minutes ago
+                if(now - prayers[1].timestamp <= 30 * 60 * 1000L)
+                    mainBg.setImageResource(R.drawable.shuruq)
+                else
+                    mainBg.setImageResource(R.drawable.dhohr)
+            }
+            prayersNames[3] -> {
+                // next is Asr in less than 30 minutes
+                // TODO change first to asr_bg when ready
+                if(millisInFuture <= 30 * 60 * 1000)
+                    mainBg.setImageResource(R.drawable.dhohr)
+                else
+                    mainBg.setImageResource(R.drawable.dhohr)
+            }
+            prayersNames[4] -> {
+                // next is maghrib in less than 30 minutes
+                // TODO change second to asr_bg
+                if(millisInFuture <= 30 * 60 * 1000)
+                    mainBg.setImageResource(R.drawable.maghrib_bg)
+                else
+                    mainBg.setImageResource(R.drawable.dhohr)
+            }
+            prayersNames[5] -> {
+                // next is Isha & Maghrib was less than 45 minutes ago
+                if(now - prayers[4].timestamp <= 45 * 60 * 1000L)
+                    mainBg.setImageResource(R.drawable.maghrib_bg)
+                else
+                    mainBg.setImageResource(R.drawable.isha_bg)
+            }
+        }
+
+    }
+
+    private fun updateNextPrayerUI(athanItem: AthanItem){
+        when(athanItem.sound){
+            SoundState.ON -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_on)
+            SoundState.BEEP -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_beep)
+            SoundState.OFF -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_off)
+        }
+    }
     override fun onStart() {
         super.onStart()
         // start count down to next prayer
@@ -289,9 +426,9 @@ class MainActivity : AppCompatActivity() {
             convertView?.findViewById<TextView>(R.id.prayerTimeTV)?.text = athanItems[position].prayerTime
 
             when(athanItems[position].sound){
-                SoundState.ON -> null //convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setImageResource()
-                SoundState.OFF -> null
-                SoundState.BEEP -> null
+                SoundState.ON -> convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setImageResource(R.drawable.ic_sound_on)
+                SoundState.OFF -> convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setImageResource(R.drawable.ic_sound_off)
+                SoundState.BEEP -> convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setImageResource(R.drawable.ic_sound_beep)
             }
 
             when(athanItems[position].selected){

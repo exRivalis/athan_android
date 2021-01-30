@@ -10,32 +10,46 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioManager
+import android.media.Ringtone
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.alterpat.athan.BuildConfig
 import com.alterpat.athan.MainActivity
 import com.alterpat.athan.R
+import com.alterpat.athan.model.SoundState
 import com.alterpat.athan.model.UserConfig
 import com.google.gson.Gson
 import java.lang.Exception
 
 val TAG: String = "NotificationTool"
 //val CHANNEL_ID = "athan_notification_channel"
+val CHANNEL_ID_SILENT = "athan_notification_silent"
+val CHANNEL_ID_BEEP = "athan_notification_beep"
 val CHANNEL_NAME = "Athan Notification"
-val SILENT_CHANNEL_ID = "athan_notification_channel_silent"
 private val NOTIFICATION_ID = 0
 
 
 // schedules a notification for firing at a specific day & time
-fun scheduleNotification(context: Context, timestamp: Long, athan: String,  alarmId: Int) {
+fun scheduleNotification(context: Context, timestamp: Long, athan: String,  alarmId: Int, soundState: SoundState) {
+
+    var soundStateInt = 1
+    when(soundState){
+        SoundState.ON -> soundStateInt = 1
+        SoundState.OFF -> soundStateInt = -1
+        SoundState.BEEP -> soundStateInt = 0
+    }
 
     var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
         intent.action = "ATHAN_ALARM"
         intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         intent.putExtra("prayer", athan)
+        intent.putExtra("soundStateInt", soundStateInt)
+        intent.putExtra("hello", true)
         PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
@@ -64,6 +78,15 @@ fun cancelScheduledNotification(context: Context, timestamp: Long, athan: String
 }
 
 // create a notification channel to be able to fire notifications
+fun createNotificationChannels(context: Context) {
+    // create prayer call notification channel
+    createNotificationChannel(context)
+    // create alarm beep notification channel
+    createNotificationChannelBeep(context)
+    // create silent notification channel
+    createNotificationChannelSilent(context)
+}
+
 fun createNotificationChannel(context: Context) {
     var mNotifyManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -87,8 +110,8 @@ fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         // delete previous notification channels
         //try {
-            mNotifyManager.deleteNotificationChannel(CHANNEL_ID_OLD)
-            Log.d(TAG, "channel deleted")
+        mNotifyManager.deleteNotificationChannel(CHANNEL_ID_OLD)
+        Log.d(TAG, "channel deleted")
         //}catch (e: Exception){
 
         //}
@@ -136,10 +159,73 @@ fun createNotificationChannel(context: Context) {
         //TODO("VERSION.SDK_INT < O")
     }
 }
+fun createNotificationChannelSilent(context: Context) {
+    var mNotifyManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // create the notification channel
+        val notificationChannel = NotificationChannel(
+            CHANNEL_ID_SILENT,
+            CHANNEL_NAME + " Silent",
+            NotificationManager.IMPORTANCE_HIGH)
+
+        // prepare audio attributes
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .build()
+
+        // prepare silent uri
+        var uri = Uri.parse(
+            "android.resource://"
+                    + context.packageName
+                    + "/"
+                    + R.raw.silent)
+
+        notificationChannel.enableLights(true)
+        //notificationChannel.lightColor = Color.GREEN
+        notificationChannel.enableVibration(true)
+        notificationChannel.description = "Athan";
+        notificationChannel.setSound(uri, audioAttributes)
+
+        mNotifyManager.createNotificationChannel(notificationChannel)
+
+    } else {
+        //TODO("VERSION.SDK_INT < O")
+    }
+}
+fun createNotificationChannelBeep(context: Context) {
+    var mNotifyManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // create the notification channel
+        val notificationChannel = NotificationChannel(
+            CHANNEL_ID_BEEP,
+            CHANNEL_NAME + " Alarm Beep",
+            NotificationManager.IMPORTANCE_HIGH)
+
+        notificationChannel.enableLights(true)
+        //notificationChannel.lightColor = Color.GREEN
+        notificationChannel.enableVibration(true)
+
+        // Creating an Audio Attribute
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .build()
+
+        notificationChannel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), audioAttributes)
+        notificationChannel.description = "Athan";
+
+        mNotifyManager.createNotificationChannel(notificationChannel)
+
+    } else {
+        //TODO("VERSION.SDK_INT < O")
+    }
+}
 
 // fire a notification
-fun fireNotification(context: Context, title: String, content: String, soundOn: Boolean){
+fun fireNotification(context: Context, title: String, content: String, soundState: SoundState){
     val notificationPendingIntent = Intent(context, MainActivity::class.java).let { i ->
         PendingIntent.getActivity(
             context,
@@ -162,15 +248,13 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
     else
         userConfig = UserConfig()
 
-    val CHANNEL_ID = userConfig.CHANNEL_ID
-
-    //var uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + BuildConfig.APPLICATION_ID + "/" + userConfig.athanRes);
-// load res id from userConf
-    var uri = Uri.parse(
-        "android.resource://"
-                + context.packageName
-                + "/"
-                + userConfig.athanRes)
+    /**  see whether it should be  silent, alarm or prayer call channel **/
+    var CHANNEL_ID : String
+    when(soundState){
+        SoundState.ON -> CHANNEL_ID = userConfig.CHANNEL_ID
+        SoundState.OFF -> CHANNEL_ID = CHANNEL_ID_SILENT
+        SoundState.BEEP -> CHANNEL_ID = CHANNEL_ID_BEEP
+    }
 
     var notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
         .setContentTitle(title)
@@ -178,14 +262,7 @@ fun fireNotification(context: Context, title: String, content: String, soundOn: 
         .setSmallIcon(R.mipmap.ic_notification)
         .setContentIntent(notificationPendingIntent)
         .setAutoCancel(false)
-    notifyBuilder.setSound(uri, AudioManager.STREAM_MUSIC)
 
-    /*
-    if(soundOn)
-        notifyBuilder.setSound(uri, AudioManager.STREAM_MUSIC)
-    else
-        notifyBuilder.setSound(null)
-     */
     Log.d(TAG, "${userConfig.athanRes}")
     mNotifyManager.notify(0, notifyBuilder.build())
 }

@@ -162,7 +162,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         setResult(Activity.RESULT_OK)
         finish()
     }
