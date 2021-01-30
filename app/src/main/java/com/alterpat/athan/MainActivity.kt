@@ -213,6 +213,7 @@ class MainActivity : AppCompatActivity() {
         prayersLayout.adapter = adapter
 
         /** on click change prayer call : ON, OFF or BEEP sound & update userConf **/
+        /*
         prayersLayout.setOnItemClickListener { parent, view, position, id ->
             var athanItem  = athanItems[position]
             when(athanItem.sound){
@@ -237,9 +238,10 @@ class MainActivity : AppCompatActivity() {
             // update userConf
             updateUserConfCalls(position, athanItems[position].sound)
         }
+         */
     }
 
-    private fun updateUserConfCalls(position: Int, soundState: SoundState){
+    protected fun updateUserConfCalls(position: Int, soundState: SoundState){
         /** load userConf from shared prefs **/
         val sharedPref = getSharedPreferences(
             getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
@@ -268,6 +270,8 @@ class MainActivity : AppCompatActivity() {
         val now = System.currentTimeMillis()
         var nextPrayer : PrayerTime = PrayerTime("Fajr", prayers[0].timestamp + 24*60*60*1000, prayers[0].timeStr)
         var position = 0
+        // by default select Fajr
+        athanItems[position].selected = true
 
         // init with next Fajr time
         Log.d(TAG, "${prayers[0].name} ${prayers[0].timeStr}")
@@ -383,7 +387,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateNextPrayerUI(athanItem: AthanItem){
+    protected fun updateNextPrayerUI(athanItem: AthanItem){
         when(athanItem.sound){
             SoundState.ON -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_on)
             SoundState.BEEP -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_beep)
@@ -437,6 +441,32 @@ class MainActivity : AppCompatActivity() {
             when(athanItems[position].selected){
                 true -> convertView?.findViewById<View>(R.id.main)?.background = context.getDrawable(R.drawable.round_bg_gray)
                 false -> convertView?.findViewById<View>(R.id.main)?.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
+            }
+
+            /** on click change prayer call : ON, OFF or BEEP sound & update userConf **/
+            convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setOnClickListener {
+                var athanItem  = athanItems[position]
+                when(athanItem.sound){
+                    SoundState.ON -> {
+                        athanItems[position].sound = SoundState.BEEP
+                        Toast.makeText(context, context.getString(R.string.athan_switche_beep)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
+                    }
+                    SoundState.BEEP -> {
+                        athanItems[position].sound = SoundState.OFF
+                        Toast.makeText(context, context.getString(R.string.athan_switched_off)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
+                    }
+                    SoundState.OFF -> {
+                        athanItems[position].sound = SoundState.ON
+                        Toast.makeText(context, context.getString(R.string.athan_switched_on)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                if(athanItem.prayerName == (context as MainActivity).nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text)
+                    (context as MainActivity).updateNextPrayerUI(athanItem)
+
+                // update userConf
+                (context as MainActivity).updateUserConfCalls(position, athanItems[position].sound)
+                (context as MainActivity).adapter.notifyDataSetChanged()
             }
 
             return convertView
