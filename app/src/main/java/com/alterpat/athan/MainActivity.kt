@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
             cancelScheduledNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name))
 
 
-            if (prayer.timestamp >= now){
+            if (prayer.timestamp >= now && userConfig.prayerAlert){
                 scheduleNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name), soundState)
             }
         }

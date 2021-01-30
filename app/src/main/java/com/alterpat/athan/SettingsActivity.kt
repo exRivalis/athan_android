@@ -47,7 +47,25 @@ class SettingsActivity : AppCompatActivity() {
 
         /** switch sound on/off **/
         prayerAlertSwitch.setOnClickListener{
-            updateSoundOn(prayerAlertSwitch.isChecked)
+            // if already checked ask for confirmation
+            if(!prayerAlertSwitch.isChecked){
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Disable Prayer Alerts?")
+                    .setMessage("You will no longer receive prayer alerts from Athan")
+                    .setNegativeButton(getString(R.string.cancel)) { dialog, which ->
+                        // Respond to negative button press
+                        prayerAlertSwitch.isChecked = true
+                    }
+                    .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                        // Respond to positive button press
+                        updateSoundOn(prayerAlertSwitch.isChecked)
+                    }
+                    .show()
+            }
+            else{
+                // switch it on
+                updateSoundOn(prayerAlertSwitch.isChecked)
+            }
         }
     }
 
@@ -67,7 +85,7 @@ class SettingsActivity : AppCompatActivity() {
 
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getString(R.string.juristic_method))
-            .setNeutralButton(getString(R.string.cancel)) { dialog, which ->
+            .setNegativeButton(getString(R.string.cancel)) { dialog, which ->
                 // Respond to neutral button press
 
             }
@@ -98,6 +116,8 @@ class SettingsActivity : AppCompatActivity() {
             putString("userConfig", gsonBuilder.toJson(userConfig))
             apply()
         }
+
+
     }
 
     private fun updateUserConf(juristic : String, description: String){

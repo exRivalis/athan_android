@@ -226,17 +226,6 @@ fun createNotificationChannelBeep(context: Context) {
 
 // fire a notification
 fun fireNotification(context: Context, title: String, content: String, soundState: SoundState){
-    val notificationPendingIntent = Intent(context, MainActivity::class.java).let { i ->
-        PendingIntent.getActivity(
-            context,
-            NOTIFICATION_ID, i, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-
-    var mNotifyManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().build())
-
     /** load user conf **/
     val sharedPref = context.getSharedPreferences(
         context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
@@ -248,21 +237,34 @@ fun fireNotification(context: Context, title: String, content: String, soundStat
     else
         userConfig = UserConfig()
 
-    /**  see whether it should be  silent, alarm or prayer call channel **/
-    var CHANNEL_ID : String
-    when(soundState){
-        SoundState.ON -> CHANNEL_ID = userConfig.CHANNEL_ID
-        SoundState.OFF -> CHANNEL_ID = CHANNEL_ID_SILENT
-        SoundState.BEEP -> CHANNEL_ID = CHANNEL_ID_BEEP
+    if(userConfig.prayerAlert){
+        /**  see whether it should be  silent, alarm or prayer call channel **/
+        var CHANNEL_ID : String
+        when(soundState){
+            SoundState.ON -> CHANNEL_ID = userConfig.CHANNEL_ID
+            SoundState.OFF -> CHANNEL_ID = CHANNEL_ID_SILENT
+            SoundState.BEEP -> CHANNEL_ID = CHANNEL_ID_BEEP
+        }
+
+        val notificationPendingIntent = Intent(context, MainActivity::class.java).let { i ->
+            PendingIntent.getActivity(
+                context,
+                NOTIFICATION_ID, i, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+        var mNotifyManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().build())
+        var notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setSmallIcon(R.mipmap.ic_notification)
+            .setContentIntent(notificationPendingIntent)
+            .setAutoCancel(false)
+
+        Log.d(TAG, "${userConfig.athanRes}")
+        mNotifyManager.notify(0, notifyBuilder.build())
     }
 
-    var notifyBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
-        .setContentTitle(title)
-        .setContentText(content)
-        .setSmallIcon(R.mipmap.ic_notification)
-        .setContentIntent(notificationPendingIntent)
-        .setAutoCancel(false)
-
-    Log.d(TAG, "${userConfig.athanRes}")
-    mNotifyManager.notify(0, notifyBuilder.build())
 }
