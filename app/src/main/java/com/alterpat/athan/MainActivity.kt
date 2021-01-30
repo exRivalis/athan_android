@@ -267,6 +267,7 @@ class MainActivity : AppCompatActivity() {
     private fun startCountDown(){
         val now = System.currentTimeMillis()
         var nextPrayer : PrayerTime = PrayerTime("Fajr", prayers[0].timestamp + 24*60*60*1000, prayers[0].timeStr)
+        var position = 0
 
         // init with next Fajr time
         Log.d(TAG, "${prayers[0].name} ${prayers[0].timeStr}")
@@ -279,23 +280,21 @@ class MainActivity : AppCompatActivity() {
                 millisInFuture = prayer.timestamp - now
                 nextPrayer = prayer
 
-                // update nextPrayerItem
-                nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text = prayer.name
-                nextPrayerItem.findViewById<TextView>(R.id.prayerTimeTV).text = prayer.timeStr
-
-                // set sound icon
-                updateNextPrayerUI(athanItems[prayers.indexOf(prayer)])
+                position = prayers.indexOf(prayer)
 
                 athanItems.map { it.selected = false }
-                athanItems[prayers.indexOf(prayer)].selected = true
+                athanItems[position].selected = true
                 adapter.notifyDataSetChanged()
-
-                // update background image
-                updateBackground(nextPrayer, millisInFuture)
 
                 break@loop
             }
         }
+
+        // set sound icon
+        updateNextPrayerUI(athanItems[position])
+
+        // update background image
+        updateBackground(nextPrayer, millisInFuture)
 
         try {
             countdown_timer.cancel()
@@ -390,6 +389,10 @@ class MainActivity : AppCompatActivity() {
             SoundState.BEEP -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_beep)
             SoundState.OFF -> nextPrayerItem.findViewById<ImageView>(R.id.soundCtrl).setImageResource(R.drawable.ic_sound_off)
         }
+
+        // update nextPrayerItem
+        nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text = athanItem.prayerName
+        nextPrayerItem.findViewById<TextView>(R.id.prayerTimeTV).text = athanItem.prayerTime
     }
     override fun onStart() {
         super.onStart()

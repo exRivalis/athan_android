@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/search_item_pad"
+        android:paddingEnd="@dimen/search_item_pad"
         android:paddingTop="@dimen/search_item_pad"
         android:paddingBottom="@dimen/search_item_pad"
         android:textColor="@color/colorText"

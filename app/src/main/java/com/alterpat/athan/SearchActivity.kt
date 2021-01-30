@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.activity_search.*
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedReader
 import java.net.URL
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SearchActivity : AppCompatActivity() {
@@ -214,7 +217,16 @@ class SearchActivity : AppCompatActivity() {
         progressIndicator.visibility = View.VISIBLE
 
         doAsync {
-            val respJsonStr = URL(request).readText()
+            // create header field to specify device language
+            var conn = URL(request).openConnection()
+
+            conn.setRequestProperty("Accept-Language", Locale.getDefault().language)
+
+            val inputStream = conn.getInputStream()
+            var bufferReader = BufferedReader(inputStream.reader())
+            val respJsonStr = bufferReader.readText()
+
+            //val respJsonStr = URL(request).readText()
             var json : JSONObject
             var success = true
 
@@ -235,8 +247,27 @@ class SearchActivity : AppCompatActivity() {
                 val jsonArray = JSONArray(respJsonStr)
                 val addedNames = ArrayList<String>()
 
+                runOnUiThread{
+                    // Done -> hide progress bar while searching
+                    progressIndicator.visibility = View.GONE
+                }
+
                 for (i in 0 until jsonArray.length()){
                     val jsonCity = jsonArray.get(i) as JSONObject
+
+                    if(!jsonCity.has("class"))
+                        continue
+
+                    /*
+                    if(jsonCity.getString("type") != "administrative"
+                        && jsonCity.getString("type") != "city"
+                        && jsonCity.getString("type") != "town")
+                        continue
+                     */
+
+                    if(jsonCity.getString("class") != "boundary" && jsonCity.getString("class") != "place")
+                        continue
+
 
                     val lat = jsonCity.getDouble("lat")
                     val lon = jsonCity.getDouble("lon")
@@ -261,8 +292,6 @@ class SearchActivity : AppCompatActivity() {
                         addedNames.add(cont)
                         runOnUiThread{
                             adapter.add(city)
-                            // Done -> hide progress bar while searching
-                            progressIndicator.visibility = View.GONE
                         }
                     }
 
