@@ -32,4 +32,5 @@
 	<dimen name="splash_bg_size">200dp</dimen>
 	<dimen name="search_text_size">8sp</dimen>
 	<dimen name="athan_item_txt_size">10sp</dimen>
+	<dimen name="athan_item_height">33dp</dimen>
 </resources>

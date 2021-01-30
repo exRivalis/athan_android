@@ -25,6 +25,7 @@ import com.alterpat.athan.tool.PrayerTimeManager
 import com.alterpat.athan.tool.cancelScheduledNotification
 import com.alterpat.athan.tool.createNotificationChannel
 import com.alterpat.athan.tool.scheduleNotification
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main3.*
 import org.jetbrains.anko.Android
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var countdown_timer: CountDownTimer
     private lateinit var prayers : ArrayList<PrayerTime>
     private lateinit var adapter : AthanAdapter
+    private lateinit var sheetBehavior: BottomSheetBehavior<View>
+
     private val TAG = "MainActivityTag"
 
     companion object {
@@ -75,7 +78,29 @@ class MainActivity : AppCompatActivity() {
         //FileManager.saveConf(this, userConf)
         //FileManager.write(userConf)
 
+        // detect bottom sheet expansion/collapse & update content to always show next prayer on peek mode
+        sheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        sheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback(){
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // if expanding and peek item is still visible -> hide it
+                if(slideOffset > 0 && nextPrayerItem.visibility == View.VISIBLE){
+                    nextPrayerItem.visibility = View.GONE
+                }
 
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // when collapsed -> show peek item
+                when(newState){
+                    4 -> nextPrayerItem.visibility = View.VISIBLE
+                }
+            }
+
+        })
+
+
+        /** setup UI **/
         loadConfAndInit()
 
 
@@ -173,7 +198,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        scheduleNotification(this, System.currentTimeMillis()+1000, "test", getAlarmId("Fajr"))
+        //scheduleNotification(this, System.currentTimeMillis()+1000, "test", getAlarmId("Fajr"))
 
         /** add item to ListView **/
         //athanItems[1].selected = true
@@ -193,6 +218,13 @@ class MainActivity : AppCompatActivity() {
         for(prayer in prayers){
             if (prayer.timestamp >= now){
                 millisInFuture = prayer.timestamp - now
+
+                // update nextPrayerItem
+                nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text = prayer.name
+                nextPrayerItem.findViewById<TextView>(R.id.prayerTimeTV).text = prayer.timeStr
+                athanItems[prayers.indexOf(prayer)].selected = true
+                adapter.notifyDataSetChanged()
+
                 break@loop
             }
         }

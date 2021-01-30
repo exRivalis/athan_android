@@ -32,4 +32,6 @@
 	<dimen name="method_pad">20dp</dimen>
 	<dimen name="method_pad_top">8dp</dimen>
 	<dimen name="round_bg_radius">20dp</dimen>
+	<dimen name="athan_item_height">66dp</dimen>
+
 </resources>

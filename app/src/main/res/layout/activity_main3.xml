@@ -127,7 +127,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -138,16 +138,27 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/bottom_sheet_padding">
         <ImageView
+            android:id="@+id/tick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/strip_margin"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/ic_bottom_sheet_tick"/>
         <ListView
             android:id="@+id/prayersLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tick"
             android:divider="@android:color/transparent"
             android:orientation="vertical"/>
+        <include
+            android:id="@+id/nextPrayerItem"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/athan_item_height"
+            layout="@layout/athan_item"
+            android:layout_below="@+id/tick"/>
+
+
 
         <!--
                 <include layout="@layout/athan_item" />
@@ -161,6 +172,6 @@
                 <include layout="@layout/athan_item" />
             -->
 
-    </LinearLayout>
+    </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
