@@ -12,7 +12,7 @@ class PrayerTimeManager {
             var longitude = userConfig.lon
             val timezone = userConfig.timezone
             val calcMethod = userConfig.method
-            val juristicMethod = userConfig.juristic
+            val juristicMethod = userConfig.juristicMethod
             val timeFormat = userConfig.timeFormat
             val prayerTimes : HashMap<String, String> = PrayTime.getPrayerTimes(latitude, longitude, timezone, calcMethod, juristicMethod, timeFormat)
 

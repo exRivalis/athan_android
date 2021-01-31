@@ -75,13 +75,13 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showJuristicMethodDialog(){
-        val singleItems = arrayOf("Standard (Shafi'i, Hanbali, Maliki)", "Hanafi")
-        val itemNames = arrayOf("Standard", "Hanafi")
+        val itemsDescriptions = arrayOf("Standard (Shafi'i, Hanbali, Maliki)", "Hanafi")
+        val itemsMethodNames = arrayOf("Standard", "Hanafi")
 
-        val checkedItem = if (userConfig.juristic == "Standard") 0 else 1
+        val checkedItem = if (userConfig.juristicMethod == "Standard") 0 else 1
 
-        var selectedJuristicDescription = userConfig.juristic
-        var selectedJuristicName = userConfig.juristicName
+        var selectedJuristicMethod = userConfig.juristicMethod
+        var selectedJuristicDescription = userConfig.juristicDescription
 
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getString(R.string.juristic_method))
@@ -91,13 +91,13 @@ class SettingsActivity : AppCompatActivity() {
             }
             .setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 // Respond to positive button press
-                updateUserConf(selectedJuristicName, selectedJuristicDescription)
+                updateUserConf(selectedJuristicDescription, selectedJuristicMethod)
             }
             // Single-choice items (initialized with checked item)
-            .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
+            .setSingleChoiceItems(itemsDescriptions, checkedItem) { dialog, which ->
                 // Respond to item chosen
-                selectedJuristicName = itemNames[which]
-                selectedJuristicDescription = singleItems[which]
+                selectedJuristicDescription = itemsDescriptions[which]
+                selectedJuristicMethod = itemsMethodNames[which]
             }
             .show()
     }
@@ -120,15 +120,15 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-    private fun updateUserConf(juristic : String, description: String){
+    private fun updateUserConf(description : String, method: String){
         /** load userConf from shared prefs **/
         val sharedPref = getSharedPreferences(
             getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
         var gsonBuilder: Gson = Gson()
 
         /** update userConf **/
-        userConfig.juristic = juristic
-        userConfig.juristicName = description
+        userConfig.juristicDescription = description
+        userConfig.juristicMethod = method
 
         /** update shared prefs **/
         with (sharedPref.edit()) {
@@ -154,7 +154,7 @@ class SettingsActivity : AppCompatActivity() {
             userConfig = UserConfig()
 
         locationName.text = userConfig.city
-        juristicMethodName.text = userConfig.juristicName
+        juristicMethodName.text = userConfig.juristicDescription
         selectedAthanName.text = userConfig.athan
         calcMethodName.text = userConfig.methodName
 
