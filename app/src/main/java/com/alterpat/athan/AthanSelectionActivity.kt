@@ -27,6 +27,7 @@ class AthanSelectionActivity : AppCompatActivity(), PrayerCallClickListener {
     private lateinit var mAdapter : PrayerCallsAdapter
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
     private var previousPosition = 0
+    private var previousPlayPosition = 0
 
     private var updateProgressRunnable : Runnable? = null
     private lateinit var userConfig : UserConfig
@@ -124,20 +125,21 @@ class AthanSelectionActivity : AppCompatActivity(), PrayerCallClickListener {
     override fun onPlay(item: PrayerCallItem, position: Int) {
             if(!prayerCalls[position].isPlaying){
                 // update items
-                prayerCalls[previousPosition].isPlaying = false
+                prayerCalls[previousPlayPosition].isPlaying = false
                 prayerCalls[position].isPlaying = true
                 // update buttons
                 mAdapter.notifyItemChanged(position)
-                mAdapter.notifyItemChanged(previousPosition)
+                mAdapter.notifyItemChanged(previousPlayPosition)
+
+                previousPlayPosition = position
 
                 // stop current athan
                 if (mediaPlayer != null) {
                     try{
-                        if(mediaPlayer!!.isPlaying) {
-                            mediaPlayer!!.stop()
-                            mediaPlayer!!.release()
-                            mediaPlayer = null
-                        }
+                        mediaPlayer!!.stop()
+                        mediaPlayer!!.release()
+                        mediaPlayer = null
+
                     }catch (e: Exception){}
 
                 }
