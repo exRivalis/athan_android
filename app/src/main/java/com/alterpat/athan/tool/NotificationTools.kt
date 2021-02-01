@@ -64,7 +64,7 @@ fun scheduleNotification(context: Context, timestamp: Long, athan: String,  alar
 }
 
 // cancel an alarm
-fun cancelScheduledNotification(context: Context, timestamp: Long, athan: String, alarmId: Int) {
+fun cancelScheduledNotification(context: Context, athan: String, alarmId: Int) {
 
     var alarmIntent = Intent(context, AthanReceiver::class.java).let { intent ->
         intent.action = "ATHAN_ALARM"
@@ -266,5 +266,26 @@ fun fireNotification(context: Context, title: String, content: String, soundStat
         Log.d(TAG, "${userConfig.athanRes}")
         mNotifyManager.notify(0, notifyBuilder.build())
     }
+
+}
+
+fun updateNotification(context: Context, prayerName: String, alarmId: Int, soundState: SoundState){
+    /** load userConf from shared prefs **/
+    val sharedPref = context.getSharedPreferences(
+        context.getString(R.string.athan_prefs_key), Context.MODE_PRIVATE)
+    var gsonBuilder: Gson = Gson()
+
+    var jsonConf: String? = sharedPref.getString("userConfig", "")
+    var userConfig : UserConfig
+    if(jsonConf != "")
+        userConfig = gsonBuilder.fromJson(jsonConf, UserConfig::class.java)
+    else
+        userConfig = UserConfig()
+    var prayers = PrayerTimeManager.getPrayers(userConfig)
+    val timestamp = prayers[alarmId].timestamp
+    // cancel this alarm with the previous SoundState
+    cancelScheduledNotification(context, prayerName, alarmId)
+    // recreate it with the new SoundState
+    scheduleNotification(context, timestamp, prayerName, alarmId, soundState)
 
 }

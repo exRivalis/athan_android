@@ -23,10 +23,7 @@ import com.alterpat.athan.model.AthanItem
 import com.alterpat.athan.model.PrayerTime
 import com.alterpat.athan.model.SoundState
 import com.alterpat.athan.model.UserConfig
-import com.alterpat.athan.tool.PrayerTimeManager
-import com.alterpat.athan.tool.cancelScheduledNotification
-import com.alterpat.athan.tool.createNotificationChannels
-import com.alterpat.athan.tool.scheduleNotification
+import com.alterpat.athan.tool.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main3.*
@@ -45,6 +42,20 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         val prayersNames = arrayListOf<String>("Fajr", "Duha", "Dhuhr", "Asr", "Maghrib", "Isha")
+        private fun getAlarmId(athan : String) : Int {
+            var res = 0
+
+            when(athan){
+                prayersNames[0] -> res = 1
+                prayersNames[1] -> res = 2
+                prayersNames[2] -> res = 3
+                prayersNames[3] -> res = 4
+                prayersNames[4] -> res = 5
+                prayersNames[5] -> res = 6
+            }
+
+            return res
+        }
 
     }
 
@@ -144,20 +155,6 @@ class MainActivity : AppCompatActivity() {
         init(userConfig)
     }
 
-    private fun getAlarmId(athan : String) : Int {
-        var res = 0
-
-        when(athan){
-            prayersNames[0] -> res = 1
-            prayersNames[1] -> res = 2
-            prayersNames[2] -> res = 3
-            prayersNames[3] -> res = 4
-            prayersNames[4] -> res = 5
-            prayersNames[5] -> res = 6
-        }
-
-        return res
-    }
 
     private fun init(userConfig: UserConfig){
 
@@ -167,7 +164,6 @@ class MainActivity : AppCompatActivity() {
 
         townNameTV.text = userConfig.city
         //townNameTV.text = "\u06de \u0671\u0644\u0644\u0651\u064e\u0647\u064f \u0646\u064f\u0648\u0631\u064f \u0671\u0644]\u0633\u0651\u064e\u0645\u064e"
-
 
         Log.d(TAG, "notifications scheduled")
 
@@ -196,7 +192,7 @@ class MainActivity : AppCompatActivity() {
              * CAUTION: When changing conf YOU should delete all previously programmed alarms first
              *
              ***/
-            cancelScheduledNotification(this, prayer.timestamp, prayer.name, getAlarmId(prayer.name))
+            cancelScheduledNotification(this, prayer.name, getAlarmId(prayer.name))
 
 
             if (prayer.timestamp >= now && userConfig.prayerAlert){
@@ -398,6 +394,7 @@ class MainActivity : AppCompatActivity() {
         nextPrayerItem.findViewById<TextView>(R.id.prayerNameTV).text = athanItem.prayerName
         nextPrayerItem.findViewById<TextView>(R.id.prayerTimeTV).text = athanItem.prayerTime
     }
+
     override fun onStart() {
         super.onStart()
         // start count down to next prayer
@@ -446,17 +443,26 @@ class MainActivity : AppCompatActivity() {
             /** on click change prayer call : ON, OFF or BEEP sound & update userConf **/
             convertView?.findViewById<ImageView>(R.id.soundCtrl)?.setOnClickListener {
                 var athanItem  = athanItems[position]
+                var alarmId = getAlarmId(athanItem.prayerName)
+                var prayerName = athanItem.prayerName
+
                 when(athanItem.sound){
                     SoundState.ON -> {
                         athanItems[position].sound = SoundState.BEEP
+                        // update notification manager
+                        updateNotification(context, prayerName, alarmId, SoundState.BEEP)
                         Toast.makeText(context, context.getString(R.string.athan_switche_beep)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
                     }
+
                     SoundState.BEEP -> {
                         athanItems[position].sound = SoundState.OFF
+                        updateNotification(context, prayerName, alarmId, SoundState.OFF)
                         Toast.makeText(context, context.getString(R.string.athan_switched_off)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
                     }
+
                     SoundState.OFF -> {
                         athanItems[position].sound = SoundState.ON
+                        updateNotification(context, prayerName, alarmId, SoundState.ON)
                         Toast.makeText(context, context.getString(R.string.athan_switched_on)+" ${athanItem.prayerName}", Toast.LENGTH_LONG).show()
                     }
                 }
