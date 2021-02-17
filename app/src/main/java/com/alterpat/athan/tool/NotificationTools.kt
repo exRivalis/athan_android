@@ -49,7 +49,6 @@ fun scheduleNotification(context: Context, timestamp: Long, athan: String,  alar
         intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         intent.putExtra("prayer", athan)
         intent.putExtra("soundStateInt", soundStateInt)
-        intent.putExtra("hello", true)
         PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

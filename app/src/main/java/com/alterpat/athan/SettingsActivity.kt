@@ -1,18 +1,27 @@
 package com.alterpat.athan
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.alterpat.athan.model.UserConfig
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_settings.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var userConfig : UserConfig
+    private val EXTERNAL_STORAGE_PERMISSION_CODE = 23
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,6 +150,40 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
+    fun savePublicly(settings: String) {
+        // Requesting Permission to access External Storage
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            EXTERNAL_STORAGE_PERMISSION_CODE
+        )
+        // getExternalStoragePublicDirectory() represents root of external storage, we are using DOWNLOADS
+        // We can use following directories: MUSIC, PODCASTS, ALARMS, RINGTONES, NOTIFICATIONS, PICTURES, MOVIES
+        val folder: File =
+            applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!
+
+        // Storing the data in file with name as geeksData.txt
+        val file = File(folder, "athan_settings_for_reboot_conf.txt")
+        writeTextData(file, settings)
+    }
+
+    private fun writeTextData(file: File, data: String) {
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = FileOutputStream(file)
+            fileOutputStream.write(data.toByteArray())
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
     private fun init(){
         /** load user conf **/
         val sharedPref = getSharedPreferences(
@@ -183,6 +226,9 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         setResult(Activity.RESULT_OK)
+        val confs = userConfig
+        //
+        //savePublicly()
         finish()
     }
 }
